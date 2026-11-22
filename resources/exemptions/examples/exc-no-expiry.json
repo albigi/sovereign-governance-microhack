@@ -1,0 +1,14 @@
+{
+  "$schema": "../exemption.schema.json",
+  "id": "exc-no-expiry",
+  "title": "Allow unencrypted transfer to the lab storage account indefinitely",
+  "requirements": ["KONF.14.1", "KONF.14.1.1"],
+  "policyAssignment": "gspp-corp",
+  "policyDefinitionReferenceIds": ["transport-secure-transfer"],
+  "resourceGroup": "rg-mh-example01",
+  "resource": "Microsoft.Storage/storageAccounts/stmhexample01exc",
+  "category": "Waiver",
+  "riskOwner": "risk-owner",
+  "justification": "The legacy batch client has no replacement date yet.",
+  "riskStatement": "Data written by the client crosses the network unencrypted with no end date."
+}

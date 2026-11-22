@@ -1,0 +1,23 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "fraud-analytics",
+  "name": "Fraud analytics",
+  "description": "Analysts run models on confidential transaction data in virtual machines.",
+  "synthetic": true,
+  "archetype": "confidential-corp",
+  "protection_need": "high",
+  "data_classification": "confidential",
+  "internet_facing": false,
+  "stores_data": true,
+  "personal_data": true,
+  "resource_types": [
+    "Microsoft.Compute/virtualMachines",
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Network/networkInterfaces",
+    "Microsoft.Network/virtualNetworks",
+    "Microsoft.Sql/servers",
+    "Microsoft.Sql/servers/databases",
+    "Microsoft.Storage/storageAccounts"
+  ]
+}

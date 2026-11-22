@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Application profile",
+  "description": "Facts about one application that decide which requirements apply to it. Version 1.0.0.",
+  "type": "object",
+  "required": ["schema_version", "id", "name", "description", "synthetic", "archetype", "protection_need", "data_classification", "internet_facing", "stores_data", "personal_data", "resource_types"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": "1.0.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "name": {"type": "string", "minLength": 1},
+    "description": {"type": "string", "minLength": 1},
+    "synthetic": {"type": "boolean", "description": "True for the example profiles in this kit."},
+    "archetype": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "An archetype id from archetypes.json."},
+    "protection_need": {"enum": ["normal", "high"], "description": "Set by the data owner. Elevated-level requirements apply only when it is high."},
+    "data_classification": {"enum": ["public", "internal", "confidential"]},
+    "internet_facing": {"type": "boolean"},
+    "stores_data": {"type": "boolean", "description": "False when the application keeps no data of its own at run time."},
+    "personal_data": {"type": "boolean"},
+    "resource_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z0-9.]+/[A-Za-z0-9/]+$"},
+      "description": "Azure resource types the application deploys, for example Microsoft.Web/sites."
+    }
+  }
+}

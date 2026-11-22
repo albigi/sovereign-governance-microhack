@@ -1,0 +1,18 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "public-website",
+  "name": "Public website",
+  "description": "Publishes information pages built from a repository; it keeps no data of its own at run time.",
+  "synthetic": true,
+  "archetype": "online",
+  "protection_need": "normal",
+  "data_classification": "public",
+  "internet_facing": true,
+  "stores_data": false,
+  "personal_data": false,
+  "resource_types": [
+    "Microsoft.Web/serverfarms",
+    "Microsoft.Web/sites"
+  ]
+}

@@ -1,0 +1,4 @@
+tools/gspp/out/
+tools/exemptions/out/
+tools/oscal/out/
+__pycache__/

@@ -1,0 +1,12 @@
+{
+  "requirements": [
+    { "id": "BES.2.2", "applicable": true },
+    { "id": "DET.3.1.8", "applicable": true, "reason": "Activity logging is in scope for the application; its policy is owned outside the lab resource group." },
+    { "id": "KONF.11.8", "applicable": false, "reason": "optional requirement not selected for the Corp archetype" },
+    { "id": "KONF.14.1", "applicable": true },
+    { "id": "KONF.14.1.1", "applicable": true },
+    { "id": "STM.2.1.7", "applicable": true },
+    { "id": "UMS.5.1", "applicable": true },
+    { "id": "UMS.5.2", "applicable": true }
+  ]
+}

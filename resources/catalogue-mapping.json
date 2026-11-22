@@ -1,0 +1,473 @@
+{
+  "$schema": "schemas/catalogue-mapping.schema.json",
+  "schema_version": "1.0.0",
+  "status": "candidate",
+  "notice": "Candidate mapping from Grundschutz++ requirement IDs to Azure controls. No information-security expert has reviewed it. It is not a compliance statement. It holds requirement IDs, modal verbs, security levels and our own mapping only; read the requirement text in your local catalogue extract.",
+  "checked": "2026-11-20",
+  "catalogue": {
+    "name": "BSI Grundschutz++ (resolved catalogue)",
+    "repository": "https://github.com/BSI-Bund/Stand-der-Technik-Bibliothek",
+    "revision": "c3f37859fdf302394de39e89252eb3e72a45953c",
+    "path": "control_layer/Grundschutz++/Grundschutz++-resolved_catalog.json",
+    "sha256": "592410c513691c18631402db3982dda6a4530dd6f2960868a6999017d311fa28",
+    "oscal_version": "1.1.3",
+    "last_modified": "2026-10-29",
+    "licence": "CC BY-SA 4.0"
+  },
+  "policy_source": {
+    "repository": "https://github.com/Azure/azure-policy",
+    "revision": "f096d8de10fb25e71dd7f82b78ded110ec711d73",
+    "path": "built-in-policies/policyDefinitions",
+    "note": "Built-in policy definition IDs, display names, versions and allowed effects were read from this commit (28 Oct 2026). Check them again before you deploy: built-in definitions change."
+  },
+  "themes": [
+    {"id": "data-location", "title": "Data location and jurisdiction", "summary": "Where data is stored, and which jurisdiction governs the provider."},
+    {"id": "provider-assurance", "title": "Provider assurance", "summary": "Third-party evidence that the provider's own controls work, such as a C5 or ISO/IEC 27001 attestation. Provider scope only."},
+    {"id": "encryption-in-transit", "title": "Encryption in transit", "summary": "Network traffic to and between services is encrypted, and weak protocols are switched off."},
+    {"id": "encryption-at-rest", "title": "Encryption at rest", "summary": "Stored data is encrypted, optionally with keys the customer controls."},
+    {"id": "logging", "title": "Security logging", "summary": "Security-relevant events reach a log store the organisation controls."},
+    {"id": "privileged-access", "title": "Privileged access", "summary": "Powerful accounts and external access use strong, multi-factor sign-in."},
+    {"id": "network-exposure", "title": "Network exposure", "summary": "Workloads are not directly reachable from, or directly connected to, public networks unless their archetype allows it."},
+    {"id": "backup", "title": "Backup and restore", "summary": "Data is backed up, stored redundantly and restorable."},
+    {"id": "vulnerability-and-patch", "title": "Vulnerabilities and patches", "summary": "Vulnerabilities are found and handled, and patch status is monitored."},
+    {"id": "data-classification", "title": "Data inventory and classification", "summary": "Data is inventoried and assigned a protection-need class by its owner."},
+    {"id": "exception-handling", "title": "Exception handling", "summary": "Every exception is authorised by a named person and documented with its reason."}
+  ],
+  "requirements": [
+    {
+      "id": "BES.2.2",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "data-location",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "e56962a6-4747-49cd-b67b-bf8b01975c4c", "name": "Allowed locations", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["*"]},
+        {"kind": "policy-definition", "id": "e765b5de-1225-4ba3-bd56-1ac6695af988", "name": "Allowed locations for resource groups", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["*"], "note": "Evaluates the resource groups that hold the application."}
+      ],
+      "evidence": "Policy compliance state of the location assignments, and the allowed-locations parameter of the archetype.",
+      "deviation_path": "policy-exemption",
+      "gap": "Azure Policy enforces the deployment region of regional resources. Resources with location 'global' and the provider's jurisdiction need a written record.",
+      "owner": "platform"
+    },
+    {
+      "id": "BES.2.3",
+      "modal_verb": "KANN",
+      "security_level": "elevated",
+      "theme": "data-location",
+      "match": "direct",
+      "route": "attestation",
+      "checkable": "no",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Contractual data-location and jurisdiction commitments of the provider, referenced in the repository"}
+      ],
+      "evidence": "Reference to the signed contract terms and the provider's data-residency commitments, with review date.",
+      "deviation_path": "attestation-exception",
+      "gap": "A contract is not resource configuration; no policy can check it.",
+      "owner": "service-assurance"
+    },
+    {
+      "id": "BES.4.8.2",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "provider-assurance",
+      "match": "direct",
+      "route": "attestation",
+      "checkable": "no",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Provider's third-party attestation (for example a C5 type 2 report) obtained from the provider's trust portal and referenced in the repository"}
+      ],
+      "evidence": "Attestation reference, scope, period covered and expiry date.",
+      "deviation_path": "attestation-exception",
+      "gap": "Covers the provider's scope only. The customer's controls are covered by the other themes.",
+      "owner": "service-assurance"
+    },
+    {
+      "id": "DLS.3.1.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "provider-assurance",
+      "match": "partial",
+      "route": "attestation",
+      "checkable": "no",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Recurring review of the provider's attestation and its bridge letters, recorded in the repository"}
+      ],
+      "evidence": "Review record with reviewer role, date and result.",
+      "deviation_path": "attestation-exception",
+      "gap": "The review is a human activity; Azure exposes no control for it.",
+      "owner": "service-assurance"
+    },
+    {
+      "id": "KONF.14.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "encryption-in-transit",
+      "match": "direct",
+      "route": "azure-policy",
+      "checkable": "yes",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "404c3081-a854-4457-ae30-26a93ef643f9", "name": "Secure transfer to storage accounts should be enabled", "version": "2.0.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"]},
+        {"kind": "policy-definition", "id": "a4af4a39-4135-47fb-b175-47fbdf85311d", "name": "App Service apps should only be accessible over HTTPS", "version": "4.0.0", "effects": ["Audit", "Disabled", "Deny"], "resource_types": ["Microsoft.Web/sites"]},
+        {"kind": "policy-definition", "id": "32e6bbec-16b6-44c2-be37-c5b672d103cf", "name": "Azure SQL Database should be running TLS version 1.2 or newer", "version": "2.0.0", "effects": ["Audit", "Disabled", "Deny"], "resource_types": ["Microsoft.Sql/servers"]}
+      ],
+      "evidence": "Policy compliance state per resource.",
+      "deviation_path": "policy-exemption",
+      "gap": "Services that the application runs inside virtual machines are not evaluated.",
+      "owner": "platform"
+    },
+    {
+      "id": "KONF.14.1.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "encryption-in-transit",
+      "match": "direct",
+      "route": "azure-policy",
+      "checkable": "yes",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "fe83a0eb-a853-422d-aac2-1bffd182c5d0", "name": "Storage accounts should have the specified minimum TLS version", "version": "1.0.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"]},
+        {"kind": "policy-definition", "id": "f0e6e85b-9b9f-4a4b-b67b-f730d42f1b0b", "name": "App Service apps should use the latest TLS version", "version": "2.2.0", "effects": ["AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Web/sites"]},
+        {"kind": "policy-definition", "id": "32e6bbec-16b6-44c2-be37-c5b672d103cf", "name": "Azure SQL Database should be running TLS version 1.2 or newer", "version": "2.0.0", "effects": ["Audit", "Disabled", "Deny"], "resource_types": ["Microsoft.Sql/servers"]}
+      ],
+      "evidence": "Policy compliance state per resource.",
+      "deviation_path": "policy-exemption",
+      "gap": "The App Service TLS definition can only audit, not deny.",
+      "owner": "platform"
+    },
+    {
+      "id": "KONF.11.8",
+      "modal_verb": "KANN",
+      "security_level": "elevated",
+      "theme": "encryption-at-rest",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "platform", "name": "Service-side encryption at rest with platform-managed keys, on by default for Azure Storage and Azure SQL"},
+        {"kind": "policy-definition", "id": "6fac406b-40ca-413b-bf8e-0bf964659c25", "name": "Storage accounts should use customer-managed key for encryption", "version": "1.1.0", "effects": ["Audit", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"]},
+        {"kind": "policy-definition", "id": "0a370ff3-6cab-4e85-8995-295fd854c5b8", "name": "SQL servers should use customer-managed keys to encrypt data at rest", "version": "2.0.1", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Sql/servers"]}
+      ],
+      "evidence": "Policy compliance state of the customer-managed-key definitions; platform encryption needs no evidence beyond the service documentation.",
+      "deviation_path": "policy-exemption",
+      "gap": "Platform encryption is always on and cannot be audited per resource. The policies check customer-managed keys, which is stronger than the requirement asks; the storage definition can only audit.",
+      "owner": "platform"
+    },
+    {
+      "id": "DET.3.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "logging",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "7f89b1eb-583c-429a-8828-af049802c1d9", "name": "Audit diagnostic setting for selected resource types", "version": "2.0.1", "effects": ["AuditIfNotExists"], "resource_types": ["*"]},
+        {"kind": "policy-definition", "id": "c0d8e23a-47be-4032-961f-8b0ff3957061", "name": "Enable logging by category group for App Service (microsoft.web/sites) to Log Analytics", "version": "1.0.0", "effects": ["DeployIfNotExists", "AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Web/sites"]},
+        {"kind": "policy-definition", "id": "6b359d8f-f88d-4052-aa7c-32015963ecc1", "name": "Enable logging by category group for Key vaults (microsoft.keyvault/vaults) to Log Analytics", "version": "1.1.0", "effects": ["DeployIfNotExists", "AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.KeyVault/vaults"]},
+        {"kind": "policy-definition", "id": "6567d3f3-42d0-4cfb-9606-9741ba60fa07", "name": "Enable logging by category group for SQL databases (microsoft.sql/servers/databases) to Log Analytics", "version": "1.1.0", "effects": ["DeployIfNotExists", "AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Sql/servers/databases"]},
+        {"kind": "policy-definition", "id": "59759c62-9a22-4cdf-ae64-074495983fef", "name": "Configure diagnostic settings for Storage Accounts to Log Analytics workspace", "version": "4.0.0", "effects": ["DeployIfNotExists", "AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"]}
+      ],
+      "evidence": "Policy compliance state of the diagnostic-setting assignments, and the Log Analytics workspace that receives the logs.",
+      "deviation_path": "policy-exemption",
+      "gap": "Policy routes platform resource logs. Which events the application itself writes, and guest operating-system events on virtual machines, stay with the application owner.",
+      "owner": "security-operations"
+    },
+    {
+      "id": "DET.3.1.8",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "logging",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "2465583e-4e78-4c15-b6be-a36cbc7c8b0f", "name": "Configure Azure Activity logs to stream to specified Log Analytics workspace", "version": "1.0.0", "effects": ["DeployIfNotExists", "Disabled"], "resource_types": ["*"]},
+        {"kind": "entra", "name": "Microsoft Entra audit logs exported to the same workspace by a diagnostic setting"}
+      ],
+      "evidence": "Activity log and Entra audit log entries for role assignments and privileged changes in the workspace.",
+      "deviation_path": "policy-exemption",
+      "gap": "Privileged actions inside the application are logged only if the application writes them.",
+      "owner": "security-operations"
+    },
+    {
+      "id": "DET.3.2",
+      "modal_verb": "KANN",
+      "security_level": "elevated",
+      "theme": "logging",
+      "match": "direct",
+      "route": "azure-policy",
+      "checkable": "yes",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "2465583e-4e78-4c15-b6be-a36cbc7c8b0f", "name": "Configure Azure Activity logs to stream to specified Log Analytics workspace", "version": "1.0.0", "effects": ["DeployIfNotExists", "Disabled"], "resource_types": ["*"]}
+      ],
+      "evidence": "Policy compliance state and the diagnostic setting on the subscription.",
+      "deviation_path": "policy-exemption",
+      "gap": "",
+      "owner": "security-operations"
+    },
+    {
+      "id": "BER.5.9",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "privileged-access",
+      "match": "direct",
+      "route": "entra",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "entra", "name": "Conditional Access policy that requires phishing-resistant multi-factor authentication for privileged directory and Azure roles"},
+        {"kind": "entra", "name": "Privileged Identity Management: just-in-time activation of privileged roles with multi-factor authentication"},
+        {"kind": "policy-definition", "id": "4e6c27d5-a6ee-49cf-b2b4-d8fe90fa2b8b", "name": "Users must authenticate with multi-factor authentication to create or update resources", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["*"]}
+      ],
+      "evidence": "Exported Conditional Access and role settings; Entra sign-in logs; policy compliance state of the resource-write definition.",
+      "deviation_path": "attestation-exception",
+      "gap": "Azure Policy sees only resource writes by users; it cannot see sign-ins, service principals or directory roles. Enforcement sits in Microsoft Entra.",
+      "owner": "identity"
+    },
+    {
+      "id": "BER.5.8",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "privileged-access",
+      "match": "direct",
+      "route": "entra",
+      "checkable": "no",
+      "applies_when": [
+        {"fact": "internet_facing", "equals": true, "otherwise": "The application is not reachable from external networks."}
+      ],
+      "controls": [
+        {"kind": "entra", "name": "Conditional Access policy with a phishing-resistant authentication strength for the application's sign-ins from external networks"}
+      ],
+      "evidence": "Exported Conditional Access policy and Entra sign-in logs.",
+      "deviation_path": "attestation-exception",
+      "gap": "Sign-in requirements are not resource configuration; Azure Policy cannot check them.",
+      "owner": "identity"
+    },
+    {
+      "id": "ARCH.5.2",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "network-exposure",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "policy-definition", "id": "83a86a26-fd1f-447c-b59d-e51f44264114", "name": "Network interfaces should not have public IPs", "version": "1.0.0", "effects": ["Deny"], "resource_types": ["Microsoft.Network/networkInterfaces"]},
+        {"kind": "policy-definition", "id": "b2982f36-99f2-4db5-8eff-283140c09693", "name": "Storage accounts should disable public network access", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"], "archetypes": ["corp", "confidential-corp"]},
+        {"kind": "policy-definition", "id": "1b8ca024-1d5c-4dec-8995-b1a932b41780", "name": "Public network access on Azure SQL Database should be disabled", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Sql/servers"], "archetypes": ["corp", "confidential-corp"]},
+        {"kind": "policy-definition", "id": "405c5871-3e91-4644-8a63-58e19d68ff5b", "name": "Azure Key Vault should disable public network access", "version": "1.1.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.KeyVault/vaults"], "archetypes": ["corp", "confidential-corp"]}
+      ],
+      "evidence": "Policy compliance state per resource.",
+      "deviation_path": "policy-exemption",
+      "gap": "The requirement concerns direct connections to public networks. The policies remove public endpoints; outbound traffic control is a firewall and routing concern of the platform hub and is not evaluated.",
+      "owner": "network"
+    },
+    {
+      "id": "ARCH.5.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "network-exposure",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [
+        {"fact": "resource_types", "includes_any": ["Microsoft.Network/virtualNetworks"], "otherwise": "The application has no virtual network of its own."}
+      ],
+      "controls": [
+        {"kind": "policy-definition", "id": "e71308d3-144b-4262-b144-efdc3cc90517", "name": "Subnets should be associated with a Network Security Group", "version": "3.0.0", "effects": ["AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Network/virtualNetworks"], "note": "Evaluates a Microsoft Defender for Cloud assessment; check that your tenant produces it without a paid plan (unverified)."}
+      ],
+      "evidence": "Policy compliance state per subnet.",
+      "deviation_path": "policy-exemption",
+      "gap": "The policy checks that a network security group exists, not that its rules restrict connections.",
+      "owner": "network"
+    },
+    {
+      "id": "NOT.4.3",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "backup",
+      "match": "partial",
+      "route": "azure-policy",
+      "checkable": "partial",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "policy-definition", "id": "013e242c-8828-4970-87b3-ab247555486d", "name": "Azure Backup should be enabled for Virtual Machines", "version": "3.0.0", "effects": ["AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Compute/virtualMachines"]},
+        {"kind": "platform", "name": "Automated backups of Azure SQL Database, on by default"}
+      ],
+      "evidence": "Policy compliance state for virtual machines; backup configuration of databases and storage from the backup vault.",
+      "deviation_path": "policy-exemption",
+      "gap": "No built-in definition in this slice audits backup of storage accounts or App Service content.",
+      "owner": "application"
+    },
+    {
+      "id": "NOT.4.12",
+      "modal_verb": "KANN",
+      "security_level": "elevated",
+      "theme": "backup",
+      "match": "direct",
+      "route": "azure-policy",
+      "checkable": "yes",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "policy-definition", "id": "bf045164-79ba-4215-8f95-f8048dc1780b", "name": "Geo-redundant storage should be enabled for Storage Accounts", "version": "1.0.0", "effects": ["Audit", "Disabled"], "resource_types": ["Microsoft.Storage/storageAccounts"]},
+        {"kind": "policy-definition", "id": "d38fc420-0735-4ef3-ac11-c806f651a570", "name": "Long-term geo-redundant backup should be enabled for Azure SQL Databases", "version": "2.0.0", "effects": ["AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Sql/servers/databases"]}
+      ],
+      "evidence": "Policy compliance state per resource.",
+      "deviation_path": "policy-exemption",
+      "gap": "Geo-redundancy must stay inside the allowed locations; check the paired region against the data-location parameter.",
+      "owner": "platform"
+    },
+    {
+      "id": "NOT.4.16.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "backup",
+      "match": "direct",
+      "route": "attestation",
+      "checkable": "no",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "attestation", "name": "Restore test on a representative sample, recorded in the repository by the application owner"}
+      ],
+      "evidence": "Restore-test record with date, sample, result and tester role.",
+      "deviation_path": "attestation-exception",
+      "gap": "A restore test is an activity, not a configuration.",
+      "owner": "application"
+    },
+    {
+      "id": "DET.5.10.2",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "vulnerability-and-patch",
+      "match": "direct",
+      "route": "azure-policy",
+      "checkable": "yes",
+      "applies_when": [
+        {"fact": "resource_types", "includes_any": ["Microsoft.Compute/virtualMachines"], "otherwise": "No virtual machines: the provider patches the platform of the PaaS services."}
+      ],
+      "controls": [
+        {"kind": "policy-definition", "id": "bd876905-5b84-4f73-ab2d-2e7a7c4568d9", "name": "Machines should be configured to periodically check for missing system updates", "version": "3.10.0", "effects": ["Audit", "Deny", "Disabled"], "resource_types": ["Microsoft.Compute/virtualMachines"]}
+      ],
+      "evidence": "Policy compliance state per machine, and the update assessment results.",
+      "deviation_path": "policy-exemption",
+      "gap": "",
+      "owner": "platform"
+    },
+    {
+      "id": "DET.5.3",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "vulnerability-and-patch",
+      "match": "partial",
+      "route": "attestation",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Documented vulnerability-scan procedure with evaluation and handling, recorded in the repository"},
+        {"kind": "policy-definition", "id": "501541f7-f7e7-4cd6-868c-4190fdad3ac9", "name": "A vulnerability assessment solution should be enabled on your virtual machines", "version": "3.0.0", "effects": ["AuditIfNotExists", "Disabled"], "resource_types": ["Microsoft.Compute/virtualMachines"], "requires_paid_plan": true, "note": "Passes only with a vulnerability assessment solution, such as a paid Microsoft Defender for Servers plan. Optional in this lab."},
+        {"kind": "defender", "name": "Microsoft Defender for Cloud vulnerability findings", "requires_paid_plan": true}
+      ],
+      "evidence": "The procedure document and, where a scanner runs, its findings export.",
+      "deviation_path": "attestation-exception",
+      "gap": "Defender for Cloud gives posture signals, not enforcement, and its scanners need a paid plan. Without one, the procedure is evidenced by attestation only.",
+      "owner": "security-operations"
+    },
+    {
+      "id": "ASST.2.4",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "data-classification",
+      "match": "partial",
+      "route": "purview",
+      "checkable": "partial",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "attestation", "name": "Protection-need class assigned by the data owner and recorded in the application profile"},
+        {"kind": "policy-definition", "id": "871b6d14-10aa-478d-b590-94f262ecfa99", "name": "Require a tag on resources", "version": "1.0.1", "effects": ["Deny"], "resource_types": ["*"], "note": "Use the tag name data-classification. A tag shows that a class was recorded, not that it is right."},
+        {"kind": "purview", "name": "Microsoft Purview sensitivity labels and data map classification", "requires_paid_plan": true}
+      ],
+      "evidence": "Owner's classification in the application profile; tag compliance state; label reports where Purview is licensed.",
+      "deviation_path": "attestation-exception",
+      "gap": "Classifying data is an owner's judgement. Policy checks only that a tag exists; Purview needs a licence and is optional in this lab.",
+      "owner": "data"
+    },
+    {
+      "id": "ASST.2.1",
+      "modal_verb": "SOLLTE",
+      "security_level": "normal",
+      "theme": "data-classification",
+      "match": "partial",
+      "route": "purview",
+      "checkable": "no",
+      "applies_when": [
+        {"fact": "stores_data", "equals": true, "otherwise": "The application keeps no data of its own."}
+      ],
+      "controls": [
+        {"kind": "attestation", "name": "Information inventory kept with the application profile and reviewed by the data owner"},
+        {"kind": "platform", "name": "Azure Resource Graph inventory of the resources that hold the data"},
+        {"kind": "purview", "name": "Microsoft Purview data map", "requires_paid_plan": true}
+      ],
+      "evidence": "Inventory record with review date; Resource Graph export of the data stores.",
+      "deviation_path": "attestation-exception",
+      "gap": "Resource Graph lists data stores, not the information inside them.",
+      "owner": "data"
+    },
+    {
+      "id": "UMS.5.1",
+      "modal_verb": "MUSS",
+      "security_level": "normal",
+      "theme": "exception-handling",
+      "match": "direct",
+      "route": "attestation",
+      "checkable": "no",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Every exception is a pull request approved by a named person in the authorising role, enforced by branch protection and code owners"}
+      ],
+      "evidence": "Pull-request approval history.",
+      "deviation_path": "none",
+      "gap": "Branch protection proves who approved, not that the approver had the authority; the authorising role is a governance decision.",
+      "owner": "information-security-officer"
+    },
+    {
+      "id": "UMS.5.2",
+      "modal_verb": "MUSS",
+      "security_level": "normal",
+      "theme": "exception-handling",
+      "match": "direct",
+      "route": "attestation",
+      "checkable": "partial",
+      "applies_when": [],
+      "controls": [
+        {"kind": "attestation", "name": "Exception record in the repository with justification, risk owner and expiry date, checked by a pull-request workflow"},
+        {"kind": "platform", "name": "Azure Policy exemption with description, category and expiry, created only from the approved record"}
+      ],
+      "evidence": "Exception records and the matching Azure Policy exemptions.",
+      "deviation_path": "none",
+      "gap": "Azure Policy exemptions make the expiry date optional; only exemptions raised through the pull-request check are guaranteed to have one.",
+      "owner": "information-security-officer"
+    }
+  ]
+}

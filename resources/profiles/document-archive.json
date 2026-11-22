@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "document-archive",
+  "name": "Document archive",
+  "description": "A packaged document-management product in virtual machines stores scanned correspondence.",
+  "synthetic": true,
+  "archetype": "corp",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": false,
+  "stores_data": true,
+  "personal_data": true,
+  "resource_types": [
+    "Microsoft.Compute/virtualMachines",
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Network/networkInterfaces",
+    "Microsoft.Network/virtualNetworks",
+    "Microsoft.Storage/storageAccounts"
+  ]
+}

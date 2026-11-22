@@ -1,0 +1,59 @@
+{
+  "name": "gspp-archetype-baseline",
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "properties": {
+    "displayName": "Test fixture: four references from the archetype baseline",
+    "description": "Only the references needed to exercise exemption decisions are included. Initiative defaults are not the effective assignment values.",
+    "policyType": "Custom",
+    "parameters": {
+      "secureTransferEffect": {
+        "type": "String",
+        "allowedValues": ["Audit", "Deny", "Disabled"],
+        "defaultValue": "Audit"
+      },
+      "residencyEffect": { "type": "String", "allowedValues": ["Audit", "Deny", "Disabled"], "defaultValue": "Audit" },
+      "infrastructureEncryptionEffect": { "type": "String", "allowedValues": ["Audit", "Deny", "Disabled"], "defaultValue": "Audit" },
+      "geoRedundancyEffect": { "type": "String", "allowedValues": ["Audit", "Disabled"], "defaultValue": "Audit" },
+      "allowedLocations": {
+        "type": "Array"
+      }
+    },
+    "policyDefinitionGroups": [
+      { "name": "BES.2.2", "category": "SOLLTE", "displayName": "BES.2.2 (SOLLTE)" },
+      { "name": "KONF.11.8", "category": "KANN", "displayName": "KONF.11.8 (KANN)" },
+      { "name": "KONF.14.1", "category": "SOLLTE", "displayName": "KONF.14.1 (SOLLTE)" },
+      { "name": "KONF.14.1.1", "category": "SOLLTE", "displayName": "KONF.14.1.1 (SOLLTE)" },
+      { "name": "NOT.4.12", "category": "KANN", "displayName": "NOT.4.12 (KANN)" },
+      { "name": "STM.2.1.7", "category": "MUSS", "displayName": "STM.2.1.7 (MUSS)" }
+    ],
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "transport-secure-transfer",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9",
+        "parameters": { "effect": { "value": "[parameters('secureTransferEffect')]" } },
+        "groupNames": ["KONF.14.1", "KONF.14.1.1"]
+      },
+      {
+        "policyDefinitionReferenceId": "residency-allowed-locations",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "parameters": {
+          "effect": { "value": "[parameters('residencyEffect')]" },
+          "listOfAllowedLocations": { "value": "[parameters('allowedLocations')]" }
+        },
+        "groupNames": ["BES.2.2", "STM.2.1.7"]
+      },
+      {
+        "policyDefinitionReferenceId": "encryption-infrastructure",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+        "parameters": { "effect": { "value": "[parameters('infrastructureEncryptionEffect')]" } },
+        "groupNames": ["KONF.11.8"]
+      },
+      {
+        "policyDefinitionReferenceId": "backup-geo-redundant-storage",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bf045164-79ba-4215-8f95-f8048dc1780b",
+        "parameters": { "effect": { "value": "[parameters('geoRedundancyEffect')]" } },
+        "groupNames": ["NOT.4.12"]
+      }
+    ]
+  }
+}

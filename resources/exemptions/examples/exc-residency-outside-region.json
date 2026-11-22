@@ -1,0 +1,14 @@
+{
+  "$schema": "../exemption.schema.json",
+  "id": "exc-residency-outside-region",
+  "title": "Allow a storage account outside the allowed regions",
+  "requirements": ["BES.2.2"],
+  "policyAssignment": "gspp-corp",
+  "policyDefinitionReferenceIds": ["residency-allowed-locations"],
+  "resourceGroup": "rg-mh-example01",
+  "category": "Waiver",
+  "expiresOn": "2026-12-04T00:00:00Z",
+  "riskOwner": "risk-owner",
+  "justification": "A test tool is only offered in a region outside the allowed list.",
+  "riskStatement": "Synthetic test data would be stored outside the allowed regions until the expiry."
+}

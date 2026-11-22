@@ -1,0 +1,130 @@
+{
+  "$schema": "schemas/archetype.schema.json",
+  "schema_version": "1.0.0",
+  "notice": "Archetype names follow the Azure landing zone management groups Corp and Online, plus Confidential Corp for workloads with a high protection need. Parameter values are examples for the lab: set your own.",
+  "parameters_basis": "STM.5.1",
+  "archetypes": [
+    {
+      "id": "corp",
+      "title": "Corp",
+      "description": "Internal workloads with a normal protection need, reachable only from the organisation's network.",
+      "lab": true,
+      "constraints": {
+        "internet_facing": [false],
+        "protection_need": ["normal"]
+      },
+      "parameters": {
+        "allowed_locations": ["germanywestcentral"],
+        "minimum_tls_version": "1.2",
+        "classification_tag": "data-classification"
+      },
+      "enforcement": {
+        "assignment_name": "gspp-corp",
+        "bindings": {
+          "residency": "obligation",
+          "transport-encryption": "bound",
+          "internal-exposure": "bound",
+          "segmentation": "bound",
+          "anonymous-access": "bound",
+          "encryption-at-rest": "not-bound",
+          "security-logging": "bound",
+          "activity-logging": "bound",
+          "cloud-log-integration": "bound",
+          "patch-assessment": "bound",
+          "backup": "bound",
+          "geo-redundancy": "not-bound",
+          "restore-test": "bound",
+          "strong-authentication": "bound",
+          "data-classification": "bound",
+          "vulnerability-handling": "bound",
+          "provider-agreement": "not-bound",
+          "provider-assurance": "bound",
+          "obligation-register": "bound",
+          "exception-authorisation": "bound"
+        },
+        "remediation_approved": ["anonymous-access", "security-logging", "activity-logging", "cloud-log-integration"]
+      }
+    },
+    {
+      "id": "online",
+      "title": "Online",
+      "description": "Workloads that serve users on the public internet.",
+      "lab": false,
+      "constraints": {
+        "internet_facing": [true]
+      },
+      "parameters": {
+        "allowed_locations": ["germanywestcentral"],
+        "minimum_tls_version": "1.2",
+        "classification_tag": "data-classification"
+      },
+      "enforcement": {
+        "assignment_name": "gspp-online",
+        "bindings": {
+          "residency": "obligation",
+          "transport-encryption": "bound",
+          "internal-exposure": "not-bound",
+          "segmentation": "bound",
+          "anonymous-access": "bound",
+          "encryption-at-rest": "not-bound",
+          "security-logging": "bound",
+          "activity-logging": "bound",
+          "cloud-log-integration": "bound",
+          "patch-assessment": "bound",
+          "backup": "bound",
+          "geo-redundancy": "not-bound",
+          "restore-test": "bound",
+          "strong-authentication": "bound",
+          "data-classification": "bound",
+          "vulnerability-handling": "bound",
+          "provider-agreement": "not-bound",
+          "provider-assurance": "bound",
+          "obligation-register": "bound",
+          "exception-authorisation": "bound"
+        },
+        "remediation_approved": ["anonymous-access", "security-logging", "activity-logging", "cloud-log-integration"]
+      }
+    },
+    {
+      "id": "confidential-corp",
+      "title": "Confidential Corp",
+      "description": "Internal workloads with a high protection need, for example confidential records.",
+      "lab": false,
+      "constraints": {
+        "internet_facing": [false],
+        "protection_need": ["high"]
+      },
+      "parameters": {
+        "allowed_locations": ["germanywestcentral"],
+        "minimum_tls_version": "1.2",
+        "classification_tag": "data-classification"
+      },
+      "enforcement": {
+        "assignment_name": "gspp-confidential-corp",
+        "bindings": {
+          "residency": "obligation",
+          "transport-encryption": "bound",
+          "internal-exposure": "bound",
+          "segmentation": "bound",
+          "anonymous-access": "bound",
+          "encryption-at-rest": "bound",
+          "security-logging": "bound",
+          "activity-logging": "bound",
+          "cloud-log-integration": "bound",
+          "patch-assessment": "bound",
+          "backup": "bound",
+          "geo-redundancy": "bound",
+          "restore-test": "bound",
+          "strong-authentication": "bound",
+          "data-classification": "bound",
+          "vulnerability-handling": "bound",
+          "provider-agreement": "bound",
+          "provider-assurance": "bound",
+          "obligation-register": "bound",
+          "exception-authorisation": "bound"
+        },
+        "remediation_approved": ["anonymous-access", "security-logging", "activity-logging", "cloud-log-integration"]
+      }
+    }
+  ]
+}

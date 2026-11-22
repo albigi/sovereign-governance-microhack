@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "asset-inventory",
+  "name": "IT asset inventory",
+  "description": "The IT team records devices, licences and their owners.",
+  "synthetic": true,
+  "archetype": "corp",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": false,
+  "stores_data": true,
+  "personal_data": false,
+  "resource_types": [
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Sql/servers",
+    "Microsoft.Sql/servers/databases",
+    "Microsoft.Web/serverfarms",
+    "Microsoft.Web/sites"
+  ]
+}

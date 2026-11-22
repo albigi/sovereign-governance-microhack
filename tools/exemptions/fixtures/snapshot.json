@@ -1,0 +1,81 @@
+{
+  "snapshotVersion": 1,
+  "collectedAt": "2026-11-20T12:00:00Z",
+  "scope": {
+    "resourceGroups": ["rg-mh-example01"]
+  },
+  "repository": {
+    "name": "owner/lab-exceptions",
+    "commit": "3333333333333333333333333333333333333333"
+  },
+  "policyStates": [
+    {
+      "resourceId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/rg-mh-example01/providers/microsoft.storage/storageaccounts/stmhexample01exc",
+      "policyAssignmentName": "gspp-corp",
+      "policyDefinitionReferenceId": "residency-allowed-locations",
+      "policyDefinitionGroupNames": ["BES.2.2", "STM.2.1.7"],
+      "complianceState": "Compliant",
+      "timestamp": "2026-11-20T11:40:00Z"
+    },
+    {
+      "resourceId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/rg-mh-example01/providers/microsoft.storage/storageaccounts/stmhexample01exc",
+      "policyAssignmentName": "gspp-corp",
+      "policyDefinitionReferenceId": "transport-secure-transfer",
+      "policyDefinitionGroupNames": ["KONF.14.1", "KONF.14.1.1"],
+      "complianceState": "Exempt",
+      "timestamp": "2026-11-20T11:40:00Z"
+    }
+  ],
+  "exemptions": [
+    {
+      "name": "exc-legacy-client-transfer",
+      "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mh-example01/providers/Microsoft.Storage/storageAccounts/stmhexample01exc/providers/Microsoft.Authorization/policyExemptions/exc-legacy-client-transfer",
+      "policyAssignmentId": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-mh-example01/providers/Microsoft.Authorization/policyAssignments/gspp-corp",
+      "policyDefinitionReferenceIds": ["transport-secure-transfer"],
+      "exemptionCategory": "Waiver",
+      "expiresOn": "2026-12-04T00:00:00Z",
+      "metadata": {
+        "managedBy": "requirement-to-evidence-kit",
+        "requirements": "KONF.14.1,KONF.14.1.1",
+        "riskOwner": "risk-owner",
+        "decisionRecord": "https://github.com/owner/lab-exceptions/pull/1",
+        "requestedBy": "lab-engineer",
+        "approvedBy": "risk-owner",
+        "approvedOn": "2026-11-20T10:01:00Z"
+      }
+    }
+  ],
+  "pullRequests": [
+    {
+      "number": 1,
+      "title": "Exemption: legacy client transfer",
+      "url": "https://github.com/owner/lab-exceptions/pull/1",
+      "author": "lab-engineer",
+      "state": "MERGED",
+      "mergedAt": "2026-11-20T10:05:00Z",
+      "closedAt": "2026-11-20T10:05:00Z",
+      "headSha": "1111111111111111111111111111111111111111",
+      "files": ["exemptions/exc-legacy-client-transfer.json"],
+      "reviews": [
+        {
+          "user": "risk-owner",
+          "state": "APPROVED",
+          "commitId": "1111111111111111111111111111111111111111",
+          "submittedAt": "2026-11-20T10:01:00Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Exemption: storage outside the allowed regions",
+      "url": "https://github.com/owner/lab-exceptions/pull/2",
+      "author": "lab-engineer",
+      "state": "CLOSED",
+      "mergedAt": "",
+      "closedAt": "2026-11-20T10:20:00Z",
+      "headSha": "2222222222222222222222222222222222222222",
+      "files": ["exemptions/exc-residency-outside-region.json"],
+      "reviews": []
+    }
+  ]
+}

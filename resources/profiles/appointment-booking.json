@@ -1,0 +1,22 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "appointment-booking",
+  "name": "Appointment booking",
+  "description": "Members of the public book and cancel appointments.",
+  "synthetic": true,
+  "archetype": "online",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": true,
+  "stores_data": true,
+  "personal_data": true,
+  "resource_types": [
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Sql/servers",
+    "Microsoft.Sql/servers/databases",
+    "Microsoft.Storage/storageAccounts",
+    "Microsoft.Web/serverfarms",
+    "Microsoft.Web/sites"
+  ]
+}

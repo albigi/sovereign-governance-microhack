@@ -1,0 +1,15 @@
+{
+  "id": "exc-legacy-client-transfer",
+  "title": "Allow unencrypted transfer to the lab storage account for a legacy client",
+  "requirements": ["KONF.14.1", "KONF.14.1.1"],
+  "policyAssignment": "gspp-corp",
+  "policyDefinitionReferenceIds": ["transport-secure-transfer"],
+  "resourceGroup": "rg-mh-example01",
+  "resource": "Microsoft.Storage/storageAccounts/stmhexample01exc",
+  "category": "Waiver",
+  "expiresOn": "2026-12-04T00:00:00Z",
+  "riskOwner": "risk-owner",
+  "justification": "A legacy batch client cannot use TLS; its replacement ships in the next release, within two weeks.",
+  "riskStatement": "Data written by the client crosses the network unencrypted until the expiry; the account holds synthetic test data only.",
+  "compensatingControls": ["Public network access to the account is disabled."]
+}

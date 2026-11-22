@@ -1,0 +1,1956 @@
+{
+  "component-definition": {
+    "uuid": "f673d241-414b-5320-9b2f-27e782b0ff25",
+    "metadata": {
+      "title": "Azure controls for Grundschutz++ requirements (candidate)",
+      "last-modified": "2026-11-20T00:00:00Z",
+      "version": "0.1.0",
+      "oscal-version": "1.1.3",
+      "props": [
+        {
+          "name": "status",
+          "ns": "urn:microhack:sovereign-governance",
+          "value": "candidate"
+        }
+      ],
+      "roles": [
+        {
+          "id": "application",
+          "title": "Application owner"
+        },
+        {
+          "id": "data",
+          "title": "Data owner"
+        },
+        {
+          "id": "identity",
+          "title": "Identity team"
+        },
+        {
+          "id": "information-security-officer",
+          "title": "Information security officer"
+        },
+        {
+          "id": "network",
+          "title": "Network team"
+        },
+        {
+          "id": "platform",
+          "title": "Platform team"
+        },
+        {
+          "id": "security-operations",
+          "title": "Security operations"
+        },
+        {
+          "id": "service-assurance",
+          "title": "Service assurance"
+        }
+      ],
+      "remarks": "Generated from catalogue-mapping.json by tools/oscal/build_component.py. Candidate mapping from Grundschutz++ requirement IDs to Azure controls. No information-security expert has reviewed it. It is not a compliance statement. It holds requirement IDs, modal verbs, security levels and our own mapping only; read the requirement text in your local catalogue extract."
+    },
+    "components": [
+      {
+        "uuid": "9d842aec-4282-55df-8bf6-0fd546f3da2b",
+        "type": "service",
+        "title": "Azure Policy",
+        "description": "Evaluates Azure resource configuration against built-in policy definitions and audits, denies or remediates it.",
+        "purpose": "Checks the requirements that resource configuration can show.",
+        "control-implementations": [
+          {
+            "uuid": "a08ed511-53f2-5db6-8c31-d00579c26c2b",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Azure Policy. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "d4205936-175e-504a-bdc9-cc1662091f0d",
+                "control-id": "BES.2.2",
+                "description": "Allowed locations (built-in policy 1.1.0); Allowed locations for resource groups (built-in policy 1.1.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-location"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: Azure Policy enforces the deployment region of regional resources. Resources with location 'global' and the provider's jurisdiction need a written record."
+              },
+              {
+                "uuid": "6216a6c6-b666-5bda-903e-7dbcf2c192c4",
+                "control-id": "KONF.14.1",
+                "description": "Secure transfer to storage accounts should be enabled (built-in policy 2.0.0); App Service apps should only be accessible over HTTPS (built-in policy 4.0.0); Azure SQL Database should be running TLS version 1.2 or newer (built-in policy 2.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "encryption-in-transit"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "yes"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/a4af4a39-4135-47fb-b175-47fbdf85311d"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/32e6bbec-16b6-44c2-be37-c5b672d103cf"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: Services that the application runs inside virtual machines are not evaluated."
+              },
+              {
+                "uuid": "66fad481-ab40-52fc-849c-8d5a7d7138c0",
+                "control-id": "KONF.14.1.1",
+                "description": "Storage accounts should have the specified minimum TLS version (built-in policy 1.0.0); App Service apps should use the latest TLS version (built-in policy 2.2.0); Azure SQL Database should be running TLS version 1.2 or newer (built-in policy 2.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "encryption-in-transit"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "yes"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/fe83a0eb-a853-422d-aac2-1bffd182c5d0"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/f0e6e85b-9b9f-4a4b-b67b-f730d42f1b0b"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/32e6bbec-16b6-44c2-be37-c5b672d103cf"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: The App Service TLS definition can only audit, not deny."
+              },
+              {
+                "uuid": "4aa106f7-2aca-5508-90e8-3ef7e4953fcc",
+                "control-id": "KONF.11.8",
+                "description": "Storage accounts should use customer-managed key for encryption (built-in policy 1.1.0); SQL servers should use customer-managed keys to encrypt data at rest (built-in policy 2.0.1).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "KANN"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "elevated"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "encryption-at-rest"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/6fac406b-40ca-413b-bf8e-0bf964659c25"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/0a370ff3-6cab-4e85-8995-295fd854c5b8"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: Platform encryption is always on and cannot be audited per resource. The policies check customer-managed keys, which is stronger than the requirement asks; the storage definition can only audit."
+              },
+              {
+                "uuid": "aed4b8ac-f067-56aa-8410-b4f85f120f70",
+                "control-id": "DET.3.1",
+                "description": "Audit diagnostic setting for selected resource types (built-in policy 2.0.1); Enable logging by category group for App Service (microsoft.web/sites) to Log Analytics (built-in policy 1.0.0); Enable logging by category group for Key vaults (microsoft.keyvault/vaults) to Log Analytics (built-in policy 1.1.0); Enable logging by category group for SQL databases (microsoft.sql/servers/databases) to Log Analytics (built-in policy 1.1.0); Configure diagnostic settings for Storage Accounts to Log Analytics workspace (built-in policy 4.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "logging"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/7f89b1eb-583c-429a-8828-af049802c1d9"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/c0d8e23a-47be-4032-961f-8b0ff3957061"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/6b359d8f-f88d-4052-aa7c-32015963ecc1"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/6567d3f3-42d0-4cfb-9606-9741ba60fa07"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/59759c62-9a22-4cdf-ae64-074495983fef"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Policy routes platform resource logs. Which events the application itself writes, and guest operating-system events on virtual machines, stay with the application owner."
+              },
+              {
+                "uuid": "f1e7a45f-39da-535a-8ca0-5a66225bbbaf",
+                "control-id": "DET.3.1.8",
+                "description": "Configure Azure Activity logs to stream to specified Log Analytics workspace (built-in policy 1.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "logging"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Privileged actions inside the application are logged only if the application writes them."
+              },
+              {
+                "uuid": "4c75e1ab-2ede-50d8-a770-4cf61c7235f5",
+                "control-id": "DET.3.2",
+                "description": "Configure Azure Activity logs to stream to specified Log Analytics workspace (built-in policy 1.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "KANN"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "elevated"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "logging"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "yes"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ]
+              },
+              {
+                "uuid": "99bf0aba-78dc-5f1c-a12c-411f02cbb4a4",
+                "control-id": "BER.5.9",
+                "description": "Users must authenticate with multi-factor authentication to create or update resources (built-in policy 1.1.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "privileged-access"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "entra"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/4e6c27d5-a6ee-49cf-b2b4-d8fe90fa2b8b"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "identity"
+                  }
+                ],
+                "remarks": "Gap: Azure Policy sees only resource writes by users; it cannot see sign-ins, service principals or directory roles. Enforcement sits in Microsoft Entra."
+              },
+              {
+                "uuid": "67be7747-54f8-5381-bd4a-1c3337718abf",
+                "control-id": "ARCH.5.2",
+                "description": "Network interfaces should not have public IPs (built-in policy 1.0.0); Storage accounts should disable public network access (built-in policy 1.1.0); Public network access on Azure SQL Database should be disabled (built-in policy 1.1.0); Azure Key Vault should disable public network access (built-in policy 1.1.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "network-exposure"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/83a86a26-fd1f-447c-b59d-e51f44264114"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/b2982f36-99f2-4db5-8eff-283140c09693"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/1b8ca024-1d5c-4dec-8995-b1a932b41780"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/405c5871-3e91-4644-8a63-58e19d68ff5b"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "network"
+                  }
+                ],
+                "remarks": "Gap: The requirement concerns direct connections to public networks. The policies remove public endpoints; outbound traffic control is a firewall and routing concern of the platform hub and is not evaluated."
+              },
+              {
+                "uuid": "43add196-e3d9-528e-add4-3c623450b6b3",
+                "control-id": "ARCH.5.1",
+                "description": "Subnets should be associated with a Network Security Group (built-in policy 3.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "network-exposure"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/e71308d3-144b-4262-b144-efdc3cc90517"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "network"
+                  }
+                ],
+                "remarks": "Gap: The policy checks that a network security group exists, not that its rules restrict connections."
+              },
+              {
+                "uuid": "95aa99e7-d3bb-55d1-983c-8a1ced91e7da",
+                "control-id": "NOT.4.3",
+                "description": "Azure Backup should be enabled for Virtual Machines (built-in policy 3.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "backup"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/013e242c-8828-4970-87b3-ab247555486d"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "application"
+                  }
+                ],
+                "remarks": "Gap: No built-in definition in this slice audits backup of storage accounts or App Service content."
+              },
+              {
+                "uuid": "2ac52779-1fd2-57fd-945d-2e93166d2090",
+                "control-id": "NOT.4.12",
+                "description": "Geo-redundant storage should be enabled for Storage Accounts (built-in policy 1.0.0); Long-term geo-redundant backup should be enabled for Azure SQL Databases (built-in policy 2.0.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "KANN"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "elevated"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "backup"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "yes"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/bf045164-79ba-4215-8f95-f8048dc1780b"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/d38fc420-0735-4ef3-ac11-c806f651a570"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: Geo-redundancy must stay inside the allowed locations; check the paired region against the data-location parameter."
+              },
+              {
+                "uuid": "26522583-e4fc-521d-a0eb-7e20b4320f49",
+                "control-id": "DET.5.10.2",
+                "description": "Machines should be configured to periodically check for missing system updates (built-in policy 3.10.0).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "vulnerability-and-patch"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "yes"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/bd876905-5b84-4f73-ab2d-2e7a7c4568d9"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ]
+              },
+              {
+                "uuid": "079342e9-c0d9-54ab-9ac8-088aad37609f",
+                "control-id": "DET.5.3",
+                "description": "A vulnerability assessment solution should be enabled on your virtual machines (built-in policy 3.0.0) (needs a paid plan).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "vulnerability-and-patch"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/501541f7-f7e7-4cd6-868c-4190fdad3ac9"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Defender for Cloud gives posture signals, not enforcement, and its scanners need a paid plan. Without one, the procedure is evidenced by attestation only."
+              },
+              {
+                "uuid": "4a535860-b179-5555-915b-cc7ffab1407c",
+                "control-id": "ASST.2.4",
+                "description": "Require a tag on resources (built-in policy 1.0.1).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  },
+                  {
+                    "name": "policy-definition-id",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "/providers/Microsoft.Authorization/policyDefinitions/871b6d14-10aa-478d-b590-94f262ecfa99"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Classifying data is an owner's judgement. Policy checks only that a tag exists; Purview needs a licence and is optional in this lab."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "f42128bc-5679-5282-bbf3-804ee721db2a",
+        "type": "service",
+        "title": "Microsoft Entra ID",
+        "description": "Identity provider: Conditional Access, Privileged Identity Management and audit logs.",
+        "purpose": "Enforces sign-in and privileged-access requirements that resource configuration cannot show.",
+        "control-implementations": [
+          {
+            "uuid": "e1968076-6624-5356-be90-c9af79401c26",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Microsoft Entra ID. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "ef319b33-1088-5651-9753-330b77540dd8",
+                "control-id": "DET.3.1.8",
+                "description": "Microsoft Entra audit logs exported to the same workspace by a diagnostic setting.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "logging"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Privileged actions inside the application are logged only if the application writes them."
+              },
+              {
+                "uuid": "4902a045-6ddf-589b-8033-df391a5cbd2a",
+                "control-id": "BER.5.9",
+                "description": "Conditional Access policy that requires phishing-resistant multi-factor authentication for privileged directory and Azure roles; Privileged Identity Management: just-in-time activation of privileged roles with multi-factor authentication.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "privileged-access"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "entra"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "identity"
+                  }
+                ],
+                "remarks": "Gap: Azure Policy sees only resource writes by users; it cannot see sign-ins, service principals or directory roles. Enforcement sits in Microsoft Entra."
+              },
+              {
+                "uuid": "7aecc672-3865-5244-b56f-449306c6b7a4",
+                "control-id": "BER.5.8",
+                "description": "Conditional Access policy with a phishing-resistant authentication strength for the application's sign-ins from external networks.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "privileged-access"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "entra"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "identity"
+                  }
+                ],
+                "remarks": "Gap: Sign-in requirements are not resource configuration; Azure Policy cannot check them."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "01c4c5e4-684b-5995-ba99-1359bc09a3fc",
+        "type": "service",
+        "title": "Azure platform defaults",
+        "description": "Behaviour Azure services provide without extra configuration, such as encryption at rest with platform-managed keys, automated database backups and the Azure Resource Graph inventory.",
+        "purpose": "Covers requirements that the services meet by default.",
+        "control-implementations": [
+          {
+            "uuid": "9495db23-6b98-5880-aec9-b19bf337e7b0",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Azure platform defaults. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "236d3463-2f37-5326-8a11-b5d731e62900",
+                "control-id": "KONF.11.8",
+                "description": "Service-side encryption at rest with platform-managed keys, on by default for Azure Storage and Azure SQL.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "KANN"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "elevated"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "encryption-at-rest"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "platform"
+                  }
+                ],
+                "remarks": "Gap: Platform encryption is always on and cannot be audited per resource. The policies check customer-managed keys, which is stronger than the requirement asks; the storage definition can only audit."
+              },
+              {
+                "uuid": "bdaa8656-c133-5dea-b80f-ccfb0c64d677",
+                "control-id": "NOT.4.3",
+                "description": "Automated backups of Azure SQL Database, on by default.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "backup"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "azure-policy"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "policy-exemption"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "application"
+                  }
+                ],
+                "remarks": "Gap: No built-in definition in this slice audits backup of storage accounts or App Service content."
+              },
+              {
+                "uuid": "3ac6720c-24ad-5c77-8b73-6cb4a4844283",
+                "control-id": "ASST.2.1",
+                "description": "Azure Resource Graph inventory of the resources that hold the data.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Resource Graph lists data stores, not the information inside them."
+              },
+              {
+                "uuid": "58b5ebfa-2bf7-5f3a-a494-e07e5a1e1ace",
+                "control-id": "UMS.5.2",
+                "description": "Azure Policy exemption with description, category and expiry, created only from the approved record.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "MUSS"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "exception-handling"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "none"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "information-security-officer"
+                  }
+                ],
+                "remarks": "Gap: Azure Policy exemptions make the expiry date optional; only exemptions raised through the pull-request check are guaranteed to have one."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "b09cfe47-26c8-5ace-b4bc-731027c76cbb",
+        "type": "service",
+        "title": "Microsoft Defender for Cloud",
+        "description": "Security posture management and vulnerability findings. Optional: the findings used here need a paid plan.",
+        "purpose": "Adds technical evidence for vulnerability requirements where a plan is enabled.",
+        "control-implementations": [
+          {
+            "uuid": "64be5523-7e76-5131-b715-47856a497339",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Microsoft Defender for Cloud. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "4cd1e8d9-3dd8-5dc0-9198-a0f12931176d",
+                "control-id": "DET.5.3",
+                "description": "Microsoft Defender for Cloud vulnerability findings (needs a paid plan).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "vulnerability-and-patch"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Defender for Cloud gives posture signals, not enforcement, and its scanners need a paid plan. Without one, the procedure is evidenced by attestation only."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "ed83e32e-a022-5a03-abd5-f16a9b5ed30b",
+        "type": "service",
+        "title": "Microsoft Purview",
+        "description": "Data map and sensitivity labels. Optional: needs a licence.",
+        "purpose": "Adds technical evidence for data inventory and classification where it is licensed.",
+        "control-implementations": [
+          {
+            "uuid": "e6bf3549-d8b4-5249-b3b9-e2ad99ec778f",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Microsoft Purview. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "82b144d9-76b8-5609-9576-b069e78dc59e",
+                "control-id": "ASST.2.4",
+                "description": "Microsoft Purview sensitivity labels and data map classification (needs a paid plan).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Classifying data is an owner's judgement. Policy checks only that a tag exists; Purview needs a licence and is optional in this lab."
+              },
+              {
+                "uuid": "1e3b8e3f-a754-5233-b1f0-2bd54b901792",
+                "control-id": "ASST.2.1",
+                "description": "Microsoft Purview data map (needs a paid plan).",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Resource Graph lists data stores, not the information inside them."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "uuid": "348b6293-2303-59c4-86e6-fcb07df4766d",
+        "type": "process-procedure",
+        "title": "Attestation and exception process",
+        "description": "Records kept in the repository and approved by pull request: attestations for requirements no technical control can check, and time-boxed exceptions with a named approver.",
+        "purpose": "Evidences what technical controls cannot show, and governs every deviation.",
+        "control-implementations": [
+          {
+            "uuid": "9d9a8c79-f2a4-534d-8846-a6e50e92c519",
+            "source": "#28de8944-4242-5c23-8623-99e64473b55f",
+            "description": "Candidate implementation of Grundschutz++ requirements by Attestation and exception process. Not a compliance statement.",
+            "implemented-requirements": [
+              {
+                "uuid": "6ba4899f-4f55-53bc-a174-209af79c863e",
+                "control-id": "BES.2.3",
+                "description": "Contractual data-location and jurisdiction commitments of the provider, referenced in the repository.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "KANN"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "elevated"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-location"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "service-assurance"
+                  }
+                ],
+                "remarks": "Gap: A contract is not resource configuration; no policy can check it."
+              },
+              {
+                "uuid": "09417fe0-81fd-5a9e-8e7c-a92a56e610b2",
+                "control-id": "BES.4.8.2",
+                "description": "Provider's third-party attestation (for example a C5 type 2 report) obtained from the provider's trust portal and referenced in the repository.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "provider-assurance"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "service-assurance"
+                  }
+                ],
+                "remarks": "Gap: Covers the provider's scope only. The customer's controls are covered by the other themes."
+              },
+              {
+                "uuid": "051fa86d-f70d-5609-8dfa-666b2d82b14c",
+                "control-id": "DLS.3.1.1",
+                "description": "Recurring review of the provider's attestation and its bridge letters, recorded in the repository.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "provider-assurance"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "service-assurance"
+                  }
+                ],
+                "remarks": "Gap: The review is a human activity; Azure exposes no control for it."
+              },
+              {
+                "uuid": "9364afaa-7678-545a-af28-d2244138ab7e",
+                "control-id": "NOT.4.16.1",
+                "description": "Restore test on a representative sample, recorded in the repository by the application owner.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "backup"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "application"
+                  }
+                ],
+                "remarks": "Gap: A restore test is an activity, not a configuration."
+              },
+              {
+                "uuid": "90781ce9-ea6f-5b2a-b92a-e2b984cae1a8",
+                "control-id": "DET.5.3",
+                "description": "Documented vulnerability-scan procedure with evaluation and handling, recorded in the repository.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "vulnerability-and-patch"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "security-operations"
+                  }
+                ],
+                "remarks": "Gap: Defender for Cloud gives posture signals, not enforcement, and its scanners need a paid plan. Without one, the procedure is evidenced by attestation only."
+              },
+              {
+                "uuid": "ae2c68c0-8791-58a8-953c-a6fa1ea56d6b",
+                "control-id": "ASST.2.4",
+                "description": "Protection-need class assigned by the data owner and recorded in the application profile.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Classifying data is an owner's judgement. Policy checks only that a tag exists; Purview needs a licence and is optional in this lab."
+              },
+              {
+                "uuid": "edf73944-d34a-551a-bdd1-b4e43e347f4c",
+                "control-id": "ASST.2.1",
+                "description": "Information inventory kept with the application profile and reviewed by the data owner.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "SOLLTE"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "data-classification"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "purview"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation-exception"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "data"
+                  }
+                ],
+                "remarks": "Gap: Resource Graph lists data stores, not the information inside them."
+              },
+              {
+                "uuid": "0cee8e3a-f97a-5608-b580-39a85a289b53",
+                "control-id": "UMS.5.1",
+                "description": "Every exception is a pull request approved by a named person in the authorising role, enforced by branch protection and code owners.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "MUSS"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "exception-handling"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "no"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "none"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "information-security-officer"
+                  }
+                ],
+                "remarks": "Gap: Branch protection proves who approved, not that the approver had the authority; the authorising role is a governance decision."
+              },
+              {
+                "uuid": "e9e31d3a-725c-596b-a9de-de0aab049811",
+                "control-id": "UMS.5.2",
+                "description": "Exception record in the repository with justification, risk owner and expiry date, checked by a pull-request workflow.",
+                "props": [
+                  {
+                    "name": "modal-verb",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "MUSS"
+                  },
+                  {
+                    "name": "security-level",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "normal"
+                  },
+                  {
+                    "name": "theme",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "exception-handling"
+                  },
+                  {
+                    "name": "match",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "direct"
+                  },
+                  {
+                    "name": "route",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "attestation"
+                  },
+                  {
+                    "name": "checkable",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "partial"
+                  },
+                  {
+                    "name": "deviation-path",
+                    "ns": "urn:microhack:sovereign-governance",
+                    "value": "none"
+                  }
+                ],
+                "responsible-roles": [
+                  {
+                    "role-id": "information-security-officer"
+                  }
+                ],
+                "remarks": "Gap: Azure Policy exemptions make the expiry date optional; only exemptions raised through the pull-request check are guaranteed to have one."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "back-matter": {
+      "resources": [
+        {
+          "uuid": "28de8944-4242-5c23-8623-99e64473b55f",
+          "title": "BSI Grundschutz++ (resolved catalogue), revision c3f37859fdf3",
+          "rlinks": [
+            {
+              "href": "https://raw.githubusercontent.com/BSI-Bund/Stand-der-Technik-Bibliothek/c3f37859fdf302394de39e89252eb3e72a45953c/control_layer/Grundschutz%2B%2B/Grundschutz%2B%2B-resolved_catalog.json",
+              "media-type": "application/oscal.catalog+json",
+              "hashes": [
+                {
+                  "algorithm": "SHA-256",
+                  "value": "592410c513691c18631402db3982dda6a4530dd6f2960868a6999017d311fa28"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "uuid": "7602369d-c478-5aa7-9851-eab1a8631d3e",
+          "title": "Catalogue mapping (source of this component definition)",
+          "rlinks": [
+            {
+              "href": "catalogue-mapping.json",
+              "media-type": "application/json"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

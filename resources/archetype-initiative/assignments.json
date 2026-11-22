@@ -1,0 +1,303 @@
+{
+  "policySetName": "gspp-archetype-baseline",
+  "generatedFrom": "resources/doctrine.json, resources/archetypes.json",
+  "siteParameters": [
+    "logAnalyticsWorkspaceId"
+  ],
+  "archetypes": {
+    "corp": {
+      "assignmentName": "gspp-corp",
+      "displayName": "GS++ archetype baseline (candidate): Corp",
+      "description": "Internal workloads with a normal protection need, reachable only from the organisation's network.",
+      "parameters": {
+        "residencyEffect": {
+          "value": "Deny"
+        },
+        "allowedLocations": {
+          "value": [
+            "germanywestcentral"
+          ]
+        },
+        "secureTransferEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsVersion": {
+          "value": "TLS1_2"
+        },
+        "publicNetworkAccessEffect": {
+          "value": "Deny"
+        },
+        "subnetNsgEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "anonymousBlobAccessEffect": {
+          "value": "Modify"
+        },
+        "infrastructureEncryptionEffect": {
+          "value": "Audit"
+        },
+        "keyVaultDiagnosticsEffect": {
+          "value": "DeployIfNotExists"
+        },
+        "periodicAssessmentEffect": {
+          "value": "Deny"
+        },
+        "backupEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "geoRedundancyEffect": {
+          "value": "Audit"
+        }
+      },
+      "roleDefinitionIds": [
+        "17d1049b-9a84-46fb-8f53-869881c3d3ab",
+        "92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+      ],
+      "nonComplianceMessages": [
+        {
+          "policyDefinitionReferenceId": "residency-allowed-locations",
+          "message": "GS++ BES.2.2 (SOLLTE), STM.2.1.7 (MUSS): Allowed locations. Deviation: none: cannot be waived."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-secure-transfer",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Secure transfer to storage accounts should be enabled. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-minimum-tls",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Storage accounts should have the specified minimum TLS version. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-public-network-access",
+          "message": "GS++ ARCH.5.2 (SOLLTE): Storage accounts should disable public network access. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "segmentation-subnet-nsg",
+          "message": "GS++ ARCH.5.1 (SOLLTE): Subnets should be associated with a Network Security Group. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-anonymous-blob-access",
+          "message": "GS++ BER.4.6 (SOLLTE): Configure your Storage account public access to be disallowed. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "encryption-infrastructure",
+          "message": "GS++ KONF.11.8 (KANN): Storage accounts should have infrastructure encryption. Deviation: none needed."
+        },
+        {
+          "policyDefinitionReferenceId": "logging-key-vault-diagnostics",
+          "message": "GS++ DET.3.1 (SOLLTE): Enable logging by category group for Key vaults (microsoft.keyvault/vaults) to Log Analytics. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "patching-periodic-assessment",
+          "message": "GS++ DET.5.10.2 (SOLLTE): Machines should be configured to periodically check for missing system updates. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-virtual-machines",
+          "message": "GS++ NOT.4.3 (SOLLTE): Azure Backup should be enabled for Virtual Machines. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-geo-redundant-storage",
+          "message": "GS++ NOT.4.12 (KANN): Geo-redundant storage should be enabled for Storage Accounts. Deviation: none needed."
+        }
+      ]
+    },
+    "online": {
+      "assignmentName": "gspp-online",
+      "displayName": "GS++ archetype baseline (candidate): Online",
+      "description": "Workloads that serve users on the public internet.",
+      "parameters": {
+        "residencyEffect": {
+          "value": "Deny"
+        },
+        "allowedLocations": {
+          "value": [
+            "germanywestcentral"
+          ]
+        },
+        "secureTransferEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsVersion": {
+          "value": "TLS1_2"
+        },
+        "publicNetworkAccessEffect": {
+          "value": "Audit"
+        },
+        "subnetNsgEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "anonymousBlobAccessEffect": {
+          "value": "Modify"
+        },
+        "infrastructureEncryptionEffect": {
+          "value": "Audit"
+        },
+        "keyVaultDiagnosticsEffect": {
+          "value": "DeployIfNotExists"
+        },
+        "periodicAssessmentEffect": {
+          "value": "Deny"
+        },
+        "backupEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "geoRedundancyEffect": {
+          "value": "Audit"
+        }
+      },
+      "roleDefinitionIds": [
+        "17d1049b-9a84-46fb-8f53-869881c3d3ab",
+        "92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+      ],
+      "nonComplianceMessages": [
+        {
+          "policyDefinitionReferenceId": "residency-allowed-locations",
+          "message": "GS++ BES.2.2 (SOLLTE), STM.2.1.7 (MUSS): Allowed locations. Deviation: none: cannot be waived."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-secure-transfer",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Secure transfer to storage accounts should be enabled. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-minimum-tls",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Storage accounts should have the specified minimum TLS version. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-public-network-access",
+          "message": "GS++ ARCH.5.2 (SOLLTE): Storage accounts should disable public network access. Deviation: reviewed change to the archetype."
+        },
+        {
+          "policyDefinitionReferenceId": "segmentation-subnet-nsg",
+          "message": "GS++ ARCH.5.1 (SOLLTE): Subnets should be associated with a Network Security Group. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-anonymous-blob-access",
+          "message": "GS++ BER.4.6 (SOLLTE): Configure your Storage account public access to be disallowed. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "encryption-infrastructure",
+          "message": "GS++ KONF.11.8 (KANN): Storage accounts should have infrastructure encryption. Deviation: none needed."
+        },
+        {
+          "policyDefinitionReferenceId": "logging-key-vault-diagnostics",
+          "message": "GS++ DET.3.1 (SOLLTE): Enable logging by category group for Key vaults (microsoft.keyvault/vaults) to Log Analytics. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "patching-periodic-assessment",
+          "message": "GS++ DET.5.10.2 (SOLLTE): Machines should be configured to periodically check for missing system updates. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-virtual-machines",
+          "message": "GS++ NOT.4.3 (SOLLTE): Azure Backup should be enabled for Virtual Machines. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-geo-redundant-storage",
+          "message": "GS++ NOT.4.12 (KANN): Geo-redundant storage should be enabled for Storage Accounts. Deviation: none needed."
+        }
+      ]
+    },
+    "confidential-corp": {
+      "assignmentName": "gspp-confidential-corp",
+      "displayName": "GS++ archetype baseline (candidate): Confidential Corp",
+      "description": "Internal workloads with a high protection need, for example confidential records.",
+      "parameters": {
+        "residencyEffect": {
+          "value": "Deny"
+        },
+        "allowedLocations": {
+          "value": [
+            "germanywestcentral"
+          ]
+        },
+        "secureTransferEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsEffect": {
+          "value": "Deny"
+        },
+        "minimumTlsVersion": {
+          "value": "TLS1_2"
+        },
+        "publicNetworkAccessEffect": {
+          "value": "Deny"
+        },
+        "subnetNsgEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "anonymousBlobAccessEffect": {
+          "value": "Modify"
+        },
+        "infrastructureEncryptionEffect": {
+          "value": "Deny"
+        },
+        "keyVaultDiagnosticsEffect": {
+          "value": "DeployIfNotExists"
+        },
+        "periodicAssessmentEffect": {
+          "value": "Deny"
+        },
+        "backupEffect": {
+          "value": "AuditIfNotExists"
+        },
+        "geoRedundancyEffect": {
+          "value": "Audit"
+        }
+      },
+      "roleDefinitionIds": [
+        "17d1049b-9a84-46fb-8f53-869881c3d3ab",
+        "92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+      ],
+      "nonComplianceMessages": [
+        {
+          "policyDefinitionReferenceId": "residency-allowed-locations",
+          "message": "GS++ BES.2.2 (SOLLTE), STM.2.1.7 (MUSS): Allowed locations. Deviation: none: cannot be waived."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-secure-transfer",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Secure transfer to storage accounts should be enabled. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "transport-minimum-tls",
+          "message": "GS++ KONF.14.1 (SOLLTE), KONF.14.1.1 (SOLLTE): Storage accounts should have the specified minimum TLS version. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-public-network-access",
+          "message": "GS++ ARCH.5.2 (SOLLTE): Storage accounts should disable public network access. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "segmentation-subnet-nsg",
+          "message": "GS++ ARCH.5.1 (SOLLTE): Subnets should be associated with a Network Security Group. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "exposure-anonymous-blob-access",
+          "message": "GS++ BER.4.6 (SOLLTE): Configure your Storage account public access to be disallowed. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "encryption-infrastructure",
+          "message": "GS++ KONF.11.8 (KANN): Storage accounts should have infrastructure encryption. Deviation: reviewed change to the archetype."
+        },
+        {
+          "policyDefinitionReferenceId": "logging-key-vault-diagnostics",
+          "message": "GS++ DET.3.1 (SOLLTE): Enable logging by category group for Key vaults (microsoft.keyvault/vaults) to Log Analytics. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "patching-periodic-assessment",
+          "message": "GS++ DET.5.10.2 (SOLLTE): Machines should be configured to periodically check for missing system updates. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-virtual-machines",
+          "message": "GS++ NOT.4.3 (SOLLTE): Azure Backup should be enabled for Virtual Machines. Deviation: time-boxed Azure Policy exemption via a reviewed pull request."
+        },
+        {
+          "policyDefinitionReferenceId": "backup-geo-redundant-storage",
+          "message": "GS++ NOT.4.12 (KANN): Geo-redundant storage should be enabled for Storage Accounts. Deviation: reviewed change to the archetype."
+        }
+      ]
+    }
+  }
+}

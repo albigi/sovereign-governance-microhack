@@ -1,0 +1,411 @@
+{
+  "name": "gspp-archetype-baseline",
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "properties": {
+    "displayName": "GS++ archetype baseline (candidate)",
+    "description": "Azure Policy effects chosen per archetype by the enforcement decision rule in resources/doctrine.md. Groups are GS++ requirement IDs; group category is the modal verb. Candidate mapping, not a compliance statement.",
+    "policyType": "Custom",
+    "metadata": {
+      "version": "0.1.0",
+      "category": "GS++ archetype baseline",
+      "status": "candidate: offline validated and partially demonstrated in Azure on 23 Nov 2026; remaining effects pending",
+      "generatedFrom": "resources/doctrine.json, resources/archetypes.json",
+      "catalogueCommit": "c3f37859fdf302394de39e89252eb3e72a45953c",
+      "builtInDefinitionsCommit": "f096d8de10fb25e71dd7f82b78ded110ec711d73"
+    },
+    "parameters": {
+      "residencyEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: residency-allowed-locations",
+          "description": "Set per archetype in assignments.json; theme residency."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "allowedLocations": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "allowedLocations",
+          "description": "Regions the external obligation allows (STM.5.1 value).",
+          "strongType": "location"
+        }
+      },
+      "secureTransferEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: transport-secure-transfer",
+          "description": "Set per archetype in assignments.json; theme transport-encryption."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "minimumTlsEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: transport-minimum-tls",
+          "description": "Set per archetype in assignments.json; theme transport-encryption."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "minimumTlsVersion": {
+        "type": "String",
+        "metadata": {
+          "displayName": "minimumTlsVersion",
+          "description": "Recognised standard for transport encryption (KONF.14.1 parameter, STM.5.1 value)."
+        },
+        "allowedValues": [
+          "TLS1_0",
+          "TLS1_1",
+          "TLS1_2"
+        ],
+        "defaultValue": "TLS1_2"
+      },
+      "publicNetworkAccessEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: exposure-public-network-access",
+          "description": "Set per archetype in assignments.json; theme internal-exposure."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "subnetNsgEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: segmentation-subnet-nsg",
+          "description": "Set per archetype in assignments.json; theme segmentation."
+        },
+        "allowedValues": [
+          "AuditIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "AuditIfNotExists"
+      },
+      "anonymousBlobAccessEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: exposure-anonymous-blob-access",
+          "description": "Set per archetype in assignments.json; theme anonymous-access."
+        },
+        "allowedValues": [
+          "Modify",
+          "Disabled"
+        ],
+        "defaultValue": "Disabled"
+      },
+      "infrastructureEncryptionEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: encryption-infrastructure",
+          "description": "Set per archetype in assignments.json; theme encryption-at-rest."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "keyVaultDiagnosticsEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: logging-key-vault-diagnostics",
+          "description": "Set per archetype in assignments.json; theme security-logging."
+        },
+        "allowedValues": [
+          "DeployIfNotExists",
+          "AuditIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "AuditIfNotExists"
+      },
+      "logAnalyticsWorkspaceId": {
+        "type": "String",
+        "metadata": {
+          "displayName": "logAnalyticsWorkspaceId",
+          "description": "Resource ID of the Log Analytics workspace that receives security logs.",
+          "strongType": "omsWorkspace",
+          "assignPermissions": true
+        }
+      },
+      "periodicAssessmentEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: patching-periodic-assessment",
+          "description": "Set per archetype in assignments.json; theme patch-assessment."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "backupEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: backup-virtual-machines",
+          "description": "Set per archetype in assignments.json; theme backup."
+        },
+        "allowedValues": [
+          "AuditIfNotExists",
+          "Disabled"
+        ],
+        "defaultValue": "AuditIfNotExists"
+      },
+      "geoRedundancyEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect: backup-geo-redundant-storage",
+          "description": "Set per archetype in assignments.json; theme geo-redundancy."
+        },
+        "allowedValues": [
+          "Audit",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    },
+    "policyDefinitionGroups": [
+      {
+        "name": "BES.2.2",
+        "category": "SOLLTE",
+        "displayName": "BES.2.2 (SOLLTE): Procurement documents the jurisdiction and data location of each cloud service.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "STM.2.1.7",
+        "category": "MUSS",
+        "displayName": "STM.2.1.7 (MUSS): Requirements that arise from external obligations are added to the requirement package.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "KONF.14.1",
+        "category": "SOLLTE",
+        "displayName": "KONF.14.1 (SOLLTE): Applications encrypt network transport to a recognised standard (parameter).",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "KONF.14.1.1",
+        "category": "SOLLTE",
+        "displayName": "KONF.14.1.1 (SOLLTE): Applications disable unencrypted and weak network connections.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "ARCH.5.2",
+        "category": "SOLLTE",
+        "displayName": "ARCH.5.2 (SOLLTE): IT systems have no direct path to the public network.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "ARCH.5.1",
+        "category": "SOLLTE",
+        "displayName": "ARCH.5.1 (SOLLTE): Network architecture restricts connections between IT systems.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "BER.4.6",
+        "category": "SOLLTE",
+        "displayName": "BER.4.6 (SOLLTE): Application functions reachable without prior authentication are documented.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "KONF.11.8",
+        "category": "KANN",
+        "displayName": "KONF.11.8 (KANN): Applications may encrypt data worth protecting at rest.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "DET.3.1",
+        "category": "SOLLTE",
+        "displayName": "DET.3.1 (SOLLTE): Applications log security-relevant events and keep them for a set period (parameter).",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "DET.5.10.2",
+        "category": "SOLLTE",
+        "displayName": "DET.5.10.2 (SOLLTE): Missing updates are detected by an automated mechanism (parameter).",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "NOT.4.3",
+        "category": "SOLLTE",
+        "displayName": "NOT.4.3 (SOLLTE): Application data is backed up at a set interval (parameter).",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      },
+      {
+        "name": "NOT.4.12",
+        "category": "KANN",
+        "displayName": "NOT.4.12 (KANN): At least one backup copy may be held in a second, distant region.",
+        "description": "GS++ requirement ID at catalogue commit c3f3785; own paraphrase, not catalogue text; candidate mapping."
+      }
+    ],
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "residency-allowed-locations",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('residencyEffect')]"
+          },
+          "listOfAllowedLocations": {
+            "value": "[parameters('allowedLocations')]"
+          }
+        },
+        "groupNames": [
+          "BES.2.2",
+          "STM.2.1.7"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "transport-secure-transfer",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('secureTransferEffect')]"
+          }
+        },
+        "groupNames": [
+          "KONF.14.1",
+          "KONF.14.1.1"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "transport-minimum-tls",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/fe83a0eb-a853-422d-aac2-1bffd182c5d0",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('minimumTlsEffect')]"
+          },
+          "minimumTlsVersion": {
+            "value": "[parameters('minimumTlsVersion')]"
+          }
+        },
+        "groupNames": [
+          "KONF.14.1",
+          "KONF.14.1.1"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "exposure-public-network-access",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b2982f36-99f2-4db5-8eff-283140c09693",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('publicNetworkAccessEffect')]"
+          }
+        },
+        "groupNames": [
+          "ARCH.5.2"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "segmentation-subnet-nsg",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e71308d3-144b-4262-b144-efdc3cc90517",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('subnetNsgEffect')]"
+          }
+        },
+        "groupNames": [
+          "ARCH.5.1"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "exposure-anonymous-blob-access",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/13502221-8df0-4414-9937-de9c5c4e396b",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('anonymousBlobAccessEffect')]"
+          }
+        },
+        "groupNames": [
+          "BER.4.6"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "encryption-infrastructure",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/4733ea7b-a883-42fe-8cac-97454c2a9e4a",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('infrastructureEncryptionEffect')]"
+          }
+        },
+        "groupNames": [
+          "KONF.11.8"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "logging-key-vault-diagnostics",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/6b359d8f-f88d-4052-aa7c-32015963ecc1",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('keyVaultDiagnosticsEffect')]"
+          },
+          "logAnalytics": {
+            "value": "[parameters('logAnalyticsWorkspaceId')]"
+          },
+          "categoryGroup": {
+            "value": "audit"
+          }
+        },
+        "groupNames": [
+          "DET.3.1"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "patching-periodic-assessment",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bd876905-5b84-4f73-ab2d-2e7a7c4568d9",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('periodicAssessmentEffect')]"
+          }
+        },
+        "groupNames": [
+          "DET.5.10.2"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "backup-virtual-machines",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/013e242c-8828-4970-87b3-ab247555486d",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('backupEffect')]"
+          }
+        },
+        "groupNames": [
+          "NOT.4.3"
+        ]
+      },
+      {
+        "policyDefinitionReferenceId": "backup-geo-redundant-storage",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/bf045164-79ba-4215-8f95-f8048dc1780b",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('geoRedundancyEffect')]"
+          }
+        },
+        "groupNames": [
+          "NOT.4.12"
+        ]
+      }
+    ]
+  }
+}

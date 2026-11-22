@@ -1,0 +1,19 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "team-wiki",
+  "name": "Team wiki",
+  "description": "Teams share internal how-to pages.",
+  "synthetic": true,
+  "archetype": "corp",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": false,
+  "stores_data": true,
+  "personal_data": false,
+  "resource_types": [
+    "Microsoft.Storage/storageAccounts",
+    "Microsoft.Web/serverfarms",
+    "Microsoft.Web/sites"
+  ]
+}

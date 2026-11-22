@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Catalogue mapping",
+  "description": "Candidate mapping from Grundschutz++ requirement IDs to Azure controls. Version 1.0.0.",
+  "type": "object",
+  "required": ["schema_version", "status", "notice", "checked", "catalogue", "policy_source", "themes", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": "1.0.0"},
+    "status": {"const": "candidate", "description": "A mapping stays a candidate until an information-security expert has reviewed it."},
+    "notice": {"type": "string", "minLength": 1},
+    "checked": {"type": "string", "format": "date", "description": "Date the control IDs, names, versions and effects were last checked."},
+    "catalogue": {
+      "description": "The only place the catalogue pin is configured: tools/gspp/extract.py, tools/gspp/check_ids.py and tools/oscal/build_component.py read it. To upgrade, follow 'Upgrade the catalogue' in resources/README.md.",
+      "type": "object",
+      "required": ["name", "repository", "revision", "path", "sha256", "oscal_version", "last_modified", "licence"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "repository": {"type": "string", "format": "uri", "description": "https://github.com/<owner>/<repository>, the authoritative BSI catalogue repository."},
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$", "description": "Full commit hash; never a branch or tag, so the catalogue cannot change underneath the kit."},
+        "path": {"type": "string", "description": "Catalogue file inside the repository."},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "SHA-256 of that file; a download with another digest is refused."},
+        "oscal_version": {"type": "string", "description": "Checked against the downloaded catalogue's metadata."},
+        "last_modified": {"type": "string", "format": "date", "description": "Checked against the downloaded catalogue's metadata."},
+        "licence": {"type": "string"}
+      }
+    },
+    "policy_source": {
+      "type": "object",
+      "required": ["repository", "revision", "path", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "repository": {"type": "string", "format": "uri"},
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "path": {"type": "string"},
+        "note": {"type": "string"}
+      }
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "summary"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"$ref": "#/$defs/slug"},
+          "title": {"type": "string"},
+          "summary": {"type": "string"}
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/requirement"}
+    }
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+    "requirement_id": {"type": "string", "pattern": "^[A-Z]{2,6}(\\.[0-9]+)+$"},
+    "requirement": {
+      "type": "object",
+      "required": ["id", "modal_verb", "security_level", "theme", "match", "route", "checkable", "applies_when", "controls", "evidence", "deviation_path", "gap", "owner"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/requirement_id"},
+        "modal_verb": {"enum": ["MUSS", "SOLLTE", "KANN"]},
+        "security_level": {"enum": ["normal", "elevated"], "description": "Catalogue level normal-SdT is 'normal'; erhöht is 'elevated'."},
+        "theme": {"$ref": "#/$defs/slug"},
+        "match": {"enum": ["direct", "partial"], "description": "How fully the controls cover the requirement."},
+        "route": {"enum": ["azure-policy", "entra", "purview", "attestation"], "description": "Where the requirement is mainly enforced or evidenced."},
+        "checkable": {"enum": ["yes", "partial", "no"], "description": "Whether Azure Policy can check the requirement."},
+        "applies_when": {"type": "array", "items": {"$ref": "#/$defs/condition"}},
+        "controls": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/control"}},
+        "evidence": {"type": "string", "minLength": 1},
+        "deviation_path": {"enum": ["policy-exemption", "attestation-exception", "none"], "description": "none: a MUSS requirement allows no exception, only a named human decision."},
+        "gap": {"type": "string"},
+        "owner": {"$ref": "#/$defs/slug"}
+      }
+    },
+    "condition": {
+      "type": "object",
+      "required": ["fact", "otherwise"],
+      "additionalProperties": false,
+      "properties": {
+        "fact": {"enum": ["protection_need", "data_classification", "internet_facing", "stores_data", "personal_data", "resource_types"]},
+        "equals": {"type": ["string", "boolean"]},
+        "any_of": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "includes_any": {"type": "array", "items": {"type": "string"}, "minItems": 1, "description": "For list facts: true when the profile list contains one of these values."},
+        "otherwise": {"type": "string", "minLength": 1, "description": "Reason recorded when the condition does not hold."}
+      },
+      "oneOf": [
+        {"required": ["equals"]},
+        {"required": ["any_of"]},
+        {"required": ["includes_any"]}
+      ]
+    },
+    "control": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["policy-definition", "entra", "purview", "defender", "platform", "attestation"]},
+        "id": {"type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", "description": "Built-in policy definition name (GUID)."},
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string"},
+        "effects": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "resource_types": {"type": "array", "items": {"type": "string"}, "minItems": 1, "description": "Resource types the definition evaluates. '*' fits every application: the definition evaluates all types or the subscription and resource groups that hold the application."},
+        "archetypes": {"type": "array", "items": {"$ref": "#/$defs/slug"}, "minItems": 1, "description": "Limits the control to these archetypes."},
+        "requires_paid_plan": {"type": "boolean"},
+        "note": {"type": "string"}
+      },
+      "if": {"properties": {"kind": {"const": "policy-definition"}}},
+      "then": {"required": ["id", "version", "effects", "resource_types"]}
+    }
+  }
+}

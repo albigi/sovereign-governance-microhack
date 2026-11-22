@@ -1,0 +1,23 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "leave-planner",
+  "name": "Leave planner",
+  "description": "Staff request leave and managers approve it in an internal web application. This is the lab application.",
+  "synthetic": true,
+  "archetype": "corp",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": false,
+  "stores_data": true,
+  "personal_data": true,
+  "resource_types": [
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Network/virtualNetworks",
+    "Microsoft.Sql/servers",
+    "Microsoft.Sql/servers/databases",
+    "Microsoft.Storage/storageAccounts",
+    "Microsoft.Web/serverfarms",
+    "Microsoft.Web/sites"
+  ]
+}

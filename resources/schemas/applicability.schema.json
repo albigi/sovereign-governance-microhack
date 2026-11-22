@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Applicability result",
+  "description": "Output of tools/gspp/applicability.py: which mapped requirements apply to one application, and the candidate controls that match its resource types. Version 1.0.0. Later challenges read 'requirements[].id', 'applicable' and 'reason'.",
+  "type": "object",
+  "required": ["schema_version", "status", "notice", "catalogue", "mapping", "profile", "archetype", "summary", "requirements"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "status": {"const": "candidate"},
+    "notice": {"type": "string"},
+    "catalogue": {
+      "type": "object",
+      "required": ["revision", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "revision": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "required": ["schema_version", "checked"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {"type": "string"},
+        "checked": {"type": "string", "format": "date"}
+      }
+    },
+    "profile": {"type": "object", "required": ["id", "archetype", "protection_need", "resource_types"], "description": "The application profile, as read."},
+    "archetype": {
+      "type": "object",
+      "required": ["id", "title", "parameters"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "parameters": {"type": "object"}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["requirements", "applicable", "not_applicable", "policy_coverage"],
+      "additionalProperties": false,
+      "properties": {
+        "requirements": {"type": "integer", "minimum": 0},
+        "applicable": {"type": "integer", "minimum": 0},
+        "not_applicable": {"type": "integer", "minimum": 0},
+        "policy_coverage": {
+          "type": "object",
+          "required": ["full", "partial", "none"],
+          "additionalProperties": false,
+          "properties": {
+            "full": {"type": "integer", "minimum": 0},
+            "partial": {"type": "integer", "minimum": 0},
+            "none": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "applicable", "reason", "modal_verb", "security_level", "theme", "route", "checkable", "policy_coverage", "deviation_path", "owner", "controls", "evidence", "gap"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Z]{2,6}(\\.[0-9]+)+$"},
+          "applicable": {"type": "boolean"},
+          "reason": {"type": "string", "minLength": 1, "description": "Why the requirement applies or does not apply."},
+          "modal_verb": {"enum": ["MUSS", "SOLLTE", "KANN"]},
+          "security_level": {"enum": ["normal", "elevated"]},
+          "theme": {"type": "string"},
+          "route": {"enum": ["azure-policy", "entra", "purview", "attestation"]},
+          "checkable": {"enum": ["yes", "partial", "no"]},
+          "policy_coverage": {
+            "enum": ["full", "partial", "none", null],
+            "description": "Azure Policy coverage for this application: full (checkable and a definition matches), partial (a definition matches but checks only part), none (no definition matches; evidence must come from another route). null when not applicable."
+          },
+          "deviation_path": {"enum": ["policy-exemption", "attestation-exception", "none"]},
+          "owner": {"type": "string"},
+          "controls": {"type": "array", "items": {"type": "object", "required": ["kind", "name"]}, "description": "Candidate controls that match the application's resource types and archetype. Empty when not applicable."},
+          "evidence": {"type": "string"},
+          "gap": {"type": "string"}
+        }
+      }
+    }
+  }
+}

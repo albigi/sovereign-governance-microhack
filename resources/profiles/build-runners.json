@@ -1,0 +1,20 @@
+{
+  "$schema": "../schemas/application-profile.schema.json",
+  "schema_version": "1.0.0",
+  "id": "build-runners",
+  "name": "Build runners",
+  "description": "Self-hosted build agents in virtual machines compile and test code; they keep no data between runs.",
+  "synthetic": true,
+  "archetype": "corp",
+  "protection_need": "normal",
+  "data_classification": "internal",
+  "internet_facing": false,
+  "stores_data": false,
+  "personal_data": false,
+  "resource_types": [
+    "Microsoft.Compute/virtualMachines",
+    "Microsoft.KeyVault/vaults",
+    "Microsoft.Network/networkInterfaces",
+    "Microsoft.Network/virtualNetworks"
+  ]
+}
