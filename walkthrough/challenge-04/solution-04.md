@@ -16,7 +16,7 @@ Order of work: walkthrough 3 tasks 1 to 6, this walkthrough tasks 1 to 5, then a
 
 ## Task 1: Try the generator offline
 
-From the `kit` folder, generate a pack from the fixture snapshot. It needs no Azure or GitHub access:
+From the repository root, generate a pack from the fixture snapshot. It needs no Azure or GitHub access:
 
 ```powershell
 Set-Location $kit

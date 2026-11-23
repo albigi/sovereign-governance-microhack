@@ -1,6 +1,6 @@
 # Walkthrough Challenge 3 - Handle a Justified Exception as a Reviewed Pull Request
 
-> **Status: written, not yet run in a sandbox.** Commands and expected outputs follow the tested tools in [`tools/exemptions/`](../../tools/exemptions/); Azure and GitHub outputs are expected results until the [validation run](../validation-run.md) records them.
+> **Status: task 1 validated live (23 Nov 2026); tasks 2 to 8 not yet run in a sandbox.** Commands and expected outputs follow the tested tools in [`tools/exemptions/`](../../tools/exemptions/); Azure and GitHub outputs are expected results until the [validation run](../validation-run.md) records them.
 
 **Estimated duration:** to be measured in the [validation run](../validation-run.md).
 
@@ -8,7 +8,7 @@
 
 ## Prerequisites
 
-Complete the [prerequisites of challenge 3](../../challenges/challenge-03.md#prerequisites) before you start. Run every command in PowerShell 7 from the `kit` folder, in the session where you set `$sub` and `$group` during the [lab bootstrap](../../labautomation/README.md). Use `py -3` instead of `python` on Windows if `python` is not on your path.
+Complete the [prerequisites of challenge 3](../../challenges/challenge-03.md#prerequisites) before you start. Run every command in PowerShell 7 from the repository root, in the session where you set `$sub` and `$group` during the [lab bootstrap](../../labautomation/README.md). Use `py -3` instead of `python` on Windows if `python` is not on your path.
 
 ### What this challenge creates
 

@@ -1,6 +1,6 @@
 # Walkthrough Challenge 2 - Enforce Applicable Requirements with Azure Policy by a Decision Rule
 
-> **Status: partial live validation (23 Nov 2026).** The subscription policy set and Corp assignment are deployed; all 13 assigned parameters match the generated doctrine. TLS and residency deny events were observed, anonymous-access Modify and infrastructure-encryption checks passed, and the Key Vault diagnostic setting appeared. The public-network Deny attempt was inconclusive; full policy evaluation, exceptions, evidence and teardown remain pending. See the [validation record](../validation-run.md).
+> **Status: partial live validation (23 Nov 2026).** The subscription policy set and Corp assignment are deployed; all 13 assigned parameters match the generated doctrine. Steps A1 to D behaved as expected, including the public-network Deny once an inherited tenant Modify policy was excluded, and the full compliance scan matched the table below. Exceptions, evidence and teardown remain pending. See the [validation record](../validation-run.md).
 
 **Estimated duration:** to be measured in the [validation run](../validation-run.md); its offline rehearsal times commands, not the sandbox tasks. Policy evaluation alone adds waits of about 5 and 15 minutes (task 3 and task 4).
 
@@ -142,7 +142,7 @@ $want.PSObject.Properties | ForEach-Object {
 } | Format-Table
 ```
 
-Expected, not yet measured: 13 rows, `match` is `True` on each. The number of `False` rows is the value readout "deployed effects that differ from the decision rule".
+Expected (observed live): 13 rows, `match` is `True` on each. The number of `False` rows is the value readout "deployed effects that differ from the decision rule".
 
 Wait about five minutes before task 4: a new assignment takes about that long to apply ([Microsoft Learn, updated 18 Mar 2026](https://learn.microsoft.com/azure/governance/policy/how-to/get-compliance-data)).
 
@@ -165,7 +165,7 @@ az storage account create -g $group -n "st$($id)c" -l $loc --sku Standard_LRS --
 az keyvault create -g $group -n "kv-$id" -l $loc --retention-days 7
 ```
 
-Expected, not yet measured:
+Expected (observed in the [validation run](../validation-run.md)):
 
 | Step | Result | Effect | Policy reference ID | GS++ groups |
 |---|---|---|---|---|
@@ -179,6 +179,8 @@ Expected, not yet measured:
 | D | diagnostic setting `setByPolicy-LogAnalytics` appears after evaluation | `DeployIfNotExists` | `logging-key-vault-diagnostics` | DET.3.1 |
 | none | no applicable resources: the lab has no subnet | `AuditIfNotExists` | `segmentation-subnet-nsg` | ARCH.5.1 |
 | none | no applicable resources: the lab has no virtual machine | `Deny`, `AuditIfNotExists` | `patching-periodic-assessment`, `backup-virtual-machines` | DET.5.10.2, NOT.4.3 |
+
+**If A3 succeeds but the account shows `publicNetworkAccess: Disabled`,** a policy inherited from your organisation rewrote the request first: Azure applies Modify effects before Deny. The activity log shows a `modify` event from another assignment. Ask your platform team how to exclude the lab (often a tag on the resource or group), or use a subscription without that policy, then repeat A3.
 
 The two `Audit` findings are KANN requirements that Corp does not select: information, not a deviation to approve. Corp deliberately keeps C locally redundant: geo-redundant storage would copy data to the paired region, outside Corp's `allowed_locations`, and the allowed-locations policy would not see it ([doctrine](../../resources/doctrine.md#where-azure-policy-alone-gives-false-assurance)).
 
@@ -207,7 +209,7 @@ az monitor activity-log list -g $group --offset 2h `
   --query "[?operationName.value=='Microsoft.Authorization/policies/deny/action'].{time:eventTimestamp, resource:resourceId}" -o table
 ```
 
-Expected, not yet measured: every compliance state carries the GS++ groups of its policy, so [challenge 4](../../challenges/challenge-04.md) maps evidence to requirements without a mapping file. `st<id>b` is non-compliant on `encryption-infrastructure` and `backup-geo-redundant-storage`, `st<id>c` on `backup-geo-redundant-storage` only. A denied request creates no resource, so A1 to A3 appear as three deny events in the activity log, not as compliance states.
+Expected (observed live): every compliance state carries the GS++ groups of its policy, so [challenge 4](../../challenges/challenge-04.md) maps evidence to requirements without a mapping file. `st<id>b` is non-compliant on `encryption-infrastructure` and `backup-geo-redundant-storage`, `st<id>c` on `backup-geo-redundant-storage` only. A denied request creates no resource, so A1 to A3 appear as three deny events in the activity log, not as compliance states.
 
 ## Task 6: List what Azure Policy cannot enforce
 

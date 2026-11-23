@@ -175,7 +175,7 @@ Before using the initiative outside Azure public, confirm each built-in exists t
 
 ## Use and change
 
-Run from the `kit` folder with Python 3.10 or later; no packages needed.
+Run from the repository root with Python 3.10 or later; no packages needed.
 
 ```powershell
 python tools/doctrine/doctrine.py classify --applicable tools/gspp/out/applicability-<profile>.json   # effect and deviation per theme, for the profile's archetype

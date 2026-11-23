@@ -17,7 +17,7 @@ These are not Azure validation, what-if, deployment, or measured challenge resul
 
 This path needs the completed files for all four challenges, Python 3 and the tools above, but **no Azure sign-in, GitHub repository or model calls**. "Offline" here permits HTTPS downloads of the pinned public catalogue and NIST schemas; it is not an air-gapped run. Keep downloaded catalogue text and generated outputs local. On Windows, use `py -3.13` in place of `python` if the Store alias masks the installed interpreter. OSCAL validation needs the packages in `tools/oscal/requirements.txt`; install them with `python -m pip install -r tools/oscal/requirements.txt` if missing.
 
-From `kit`, derive the application scope, generate the policy set and compile, without deploying:
+From the repository root, derive the application scope, generate the policy set and compile, without deploying:
 
 ```powershell
 python tools\gspp\extract.py

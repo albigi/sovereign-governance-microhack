@@ -1,6 +1,6 @@
 # Live validation record
 
-**Status (23 Nov 2026): partial.** Offline tests pass. An isolated Azure run deployed the policy set and Corp assignment. No exception, approval workflow, evidence-pack collection or cleanup has been validated yet. This is a lab observation, not an assurance or compliance claim.
+**Status (23 Nov 2026): partial.** Offline tests pass. Challenge 2 and challenge 3 task 1 behaved as expected in an isolated Azure run. The exception approval workflow, evidence-pack collection and cleanup have not been validated yet. This is a lab observation, not an assurance or compliance claim.
 
 ## Live Azure results
 
@@ -13,12 +13,13 @@ The run used one disposable resource group in Germany West Central. Identifiers 
 | Disallowed region | Storage-account request rejected; matching Azure Policy Deny event recorded | Pass |
 | Anonymous blob access | Creation requested public blob access; resulting `allowBlobPublicAccess` was `false` | Pass |
 | Infrastructure encryption | Compliant test account reports infrastructure encryption enabled | Pass |
-| Public network access | Create and update requests specifying `Enabled` succeeded, but Azure reported the effective property as `Disabled`. No violating state was observed, so this does **not** prove Deny enforcement | Inconclusive |
+| Public network access | First attempt: an inherited tenant Modify policy rewrote `Enabled` to `Disabled` before Deny ran (activity log). With the test account excluded from that tenant policy, the request was rejected by `exposure-public-network-access` | Pass |
 | Key Vault diagnostics | The `setByPolicy-LogAnalytics` diagnostic setting appeared, with the audit category routed to the lab workspace | Pass |
-| Compliance scan | Initial results were incomplete; full policy-state evaluation remains pending | Pending |
-| Exceptions, evidence, cleanup and cost | Not completed or not yet attributable | Pending |
+| Compliance scan | All `gspp-corp` states match the challenge 2 table: only `encryption-infrastructure` (B) and `backup-geo-redundant-storage` (B, C) are non-compliant | Pass |
+| Challenge 3, task 1 | Compliant account created; disabling secure transfer rejected by `transport-secure-transfer` | Pass |
+| Exception approval, evidence, cleanup and cost | Not completed or not yet attributable | Pending |
 
-The public-network test account was verified with public network access disabled after the test. The tests touched only resources created for this run; pre-existing resources were not changed.
+Hosting tenants can assign their own Modify or Deny policies that run before or beside the lab's. The tests touched only resources created for this run; pre-existing resources were not changed.
 
 ## Local checks
 
