@@ -55,7 +55,7 @@ After the four challenges you can:
 | PowerShell 7 and Azure CLI with Bicep | ✔ | ✔ | Offline, the CLI only compiles Bicep; no sign-in |
 | HTTPS access to github.com and the NIST OSCAL schemas | ✔ | ✔ | Downloads the pinned catalogue and the schemas: offline means no Azure, not air-gapped |
 | A disposable Azure sandbox subscription, with written approval of a dated budget and a named owner for cleanup | | ✔ | Owner of the subscription, or the narrower [rights in walkthrough 2](walkthrough/challenge-02/solution-02.md#rights); never a production subscription |
-| GitHub CLI, a GitHub repository you administer whose `main` branch can be protected, and a second account as risk owner | | ✔ (challenges 3 and 4) | Public on GitHub Free, or private on GitHub Pro, Team or Enterprise |
+| GitHub CLI and a GitHub repository you administer whose `main` branch can be protected; one account is enough (lab self-approval) | | ✔ (challenges 3 and 4) | Public on GitHub Free, or private on GitHub Pro, Team or Enterprise |
 | [Sovereign Cloud MicroHack challenge 1](https://github.com/microsoft/MicroHack/blob/main/03-Azure/01-03-Infrastructure/01_Sovereign_Cloud/challenges/challenge-01.md) | recommended | recommended | Azure Policy and RBAC basics, not repeated here |
 
 Each challenge lists its own prerequisites in full.

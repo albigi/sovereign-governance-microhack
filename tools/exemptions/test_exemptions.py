@@ -132,8 +132,8 @@ class Rules(unittest.TestCase):
 
 
 class Decision(unittest.TestCase):
-    def review(self, user, state, commit=HEAD, at="2026-11-20T10:00:00Z"):
-        return {"user": user, "state": state, "commitId": commit, "submittedAt": at}
+    def review(self, user, state, commit=HEAD, at="2026-11-20T10:00:00Z", body=""):
+        return {"user": user, "state": state, "commitId": commit, "submittedAt": at, "body": body}
 
     def test_approval_by_the_risk_owner_on_the_head_passes(self):
         reviews = [self.review("Risk-Owner", "APPROVED")]
@@ -157,6 +157,22 @@ class Decision(unittest.TestCase):
     def test_other_approvers_do_not_count(self):
         reviews = [self.review("someone-else", "APPROVED")]
         self.assertIn("awaiting approval", ex.decision_errors(example(), "lab-engineer", HEAD, reviews)[0])
+
+    def test_lab_self_approval_needs_the_flag_and_an_approve_comment_on_the_head(self):
+        approve = self.review("risk-owner", "COMMENTED", body="/approve\nI accept the risk until expiry.")
+        self.assertIn("opened the pull request", ex.decision_errors(example(), "risk-owner", HEAD, [approve])[0])
+        self.assertEqual(ex.decision_errors(example(), "risk-owner", HEAD, [approve], self_approval=True), [])
+        for reviews, error in (([self.review("risk-owner", "COMMENTED", body="Looks fine, /approve later")],
+                                "awaiting approval"),
+                               ([dict(approve, commitId="0" * 40)], "not the current head")):
+            with self.subTest(error=error):
+                errors = ex.decision_errors(example(), "risk-owner", HEAD, reviews, self_approval=True)
+                self.assertIn(error, errors[0])
+
+    def test_self_approved_exemption_is_marked_in_azure(self):
+        record = {"url": "https://github.com/owner/repo/pull/1", "author": "risk-owner"}
+        body = ex.exemption_body(example(), "/assignment", record, {"user": "Risk-Owner", "submittedAt": "t"})
+        self.assertEqual(body["properties"]["metadata"]["approvalMode"], "lab-self-approval")
 
 
 class Apply(unittest.TestCase):
@@ -269,6 +285,7 @@ class InitRepo(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("PASS", output.getvalue())
         self.assertIn("REFUSED", output.getvalue())
+        self.assertFalse(json.loads((target / "lab.json").read_text(encoding="utf-8"))["selfApproval"])
 
     def test_copied_extractor_finds_its_catalogue_pin(self):
         mapping = HERE.parent.parent / "resources" / "catalogue-mapping.json"

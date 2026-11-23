@@ -19,7 +19,7 @@ class Pack(unittest.TestCase):
         self.temp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.temp)
 
-    def run_pack(self, snapshot=None, as_of=None, scope=True, exemptions_dir=None):
+    def run_pack(self, snapshot=None, as_of=None, scope=True, exemptions_dir=None, self_approval=False):
         path = self.temp / "snapshot.json"
         path.write_text(json.dumps(snapshot or SNAPSHOT), encoding="utf-8")
         scope_path = FIXTURES / "scope.json" if scope is True else None
@@ -27,7 +27,7 @@ class Pack(unittest.TestCase):
             scope_path = self.temp / "scope.json"
             scope_path.write_text(json.dumps(scope), encoding="utf-8")
         return ev.generate(path, exemptions_dir or FIXTURES / "exemptions", FIXTURES / "initiative.json",
-                           FIXTURES / "catalogue.csv", scope_path, as_of)
+                           FIXTURES / "catalogue.csv", scope_path, as_of, self_approval=self_approval)
 
     def statuses(self, **options):
         pack, _, _ = self.run_pack(**options)
@@ -117,6 +117,21 @@ class Pack(unittest.TestCase):
         found = self.statuses(snapshot=snapshot)
         self.assertEqual(found["UMS.5.1"], "not-fulfilled")
         self.assertEqual(found["UMS.5.2"], "not-fulfilled")
+
+    def test_lab_self_approval_counts_only_in_lab_mode_and_is_disclosed(self):
+        snapshot = copy.deepcopy(SNAPSHOT)
+        pr = next(pr for pr in snapshot["pullRequests"] if pr["number"] == 1)
+        pr["author"] = "risk-owner"
+        for review in pr["reviews"]:
+            review.update(state="COMMENTED", body="/approve")
+        strict = self.statuses(snapshot=snapshot)
+        self.assertEqual((strict["KONF.14.1"], strict["UMS.5.1"]), ("not-fulfilled", "not-fulfilled"))
+        pack, _, results = self.run_pack(snapshot=snapshot, self_approval=True)
+        self.assertEqual(ev.statuses(pack)["KONF.14.1"][1], "approved-temporary")
+        reasons = {result["id"]: (result["status"], " ".join(result["reasons"])) for result in results}
+        self.assertEqual(reasons["UMS.5.1"][0], "fulfilled")
+        self.assertIn("lab self-approval", reasons["UMS.5.1"][1])
+        self.assertIn("lab self-approval by the requester", reasons["KONF.14.1"][1])
 
     def test_non_compliant_and_unknown_states(self):
         snapshot = copy.deepcopy(SNAPSHOT)

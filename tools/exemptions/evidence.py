@@ -37,6 +37,8 @@ PROCESS = {
     "UMS.5.2": "every exemption in force has a file with requirements, justification, risk statement, "
                "risk owner and expiry, and a merged pull request",
 }
+LAB_UMS_5_1 = ("every exemption in force was approved on its final commit by its named risk owner; lab "
+               "self-approval allowed the requester to approve, production needs a different person")
 RANK = {"fulfilled": 1, "deviation": 2, "unresolved": 3, "not-fulfilled": 4}
 
 
@@ -143,7 +145,8 @@ def collect(resource_groups, repo, folder="exemptions", now=None):
 class Context:
     """Everything `generate` reads; built once so the evaluation is a pure function of its inputs."""
 
-    def __init__(self, snapshot, documents, references, verbs, scope, as_of, max_age_hours, folder):
+    def __init__(self, snapshot, documents, references, verbs, scope, as_of, max_age_hours, folder,
+                 self_approval=False):
         self.snapshot = snapshot
         self.documents = documents
         self.references = None if references is None else {key.lower(): groups for key, groups in references.items()}
@@ -153,6 +156,7 @@ class Context:
         self.max_age = timedelta(hours=max_age_hours)
         self.max_age_hours = max_age_hours
         self.folder = folder
+        self.self_approval = self_approval
         self.pull_requests = snapshot.get("pullRequests", [])
         self.observations = {}
 
@@ -212,7 +216,8 @@ def judge_exempt(context, state):
     record = context.record_of(name)
     if record is None:
         return "not-fulfilled", f"exemption {name} has no merged pull request: no decision record", None
-    errors = ex.decision_errors(document, record["author"], record["headSha"], record["reviews"])
+    errors = ex.decision_errors(document, record["author"], record["headSha"], record["reviews"],
+                                context.self_approval)
     if errors:
         return "not-fulfilled", f"exemption {name} lacks an approved decision: {'; '.join(errors)}", None
     expected_refs = {ref.lower() for ref in document.get("policyDefinitionReferenceIds", [])}
@@ -243,7 +248,7 @@ def judge_exempt(context, state):
     approved = parse_time(document.get("expiresOn"))
     if approved is None or expires is None or expires != approved:
         return "not-fulfilled", f"exemption {name} in Azure does not match the approved expiry in its file", None
-    approval = ex.approval_of(document, record["reviews"])
+    approval = ex.approval_of(document, record["reviews"], context.self_approval)
     deviation = {
         "exemption": name,
         "expiresOn": stamp(expires),
@@ -251,8 +256,9 @@ def judge_exempt(context, state):
         "approvedBy": approval["user"],
         "category": matched["exemptionCategory"],
     }
+    own = " (lab self-approval by the requester)" if approval["user"].lower() == record["author"].lower() else ""
     reason = (f"approved temporary deviation {name} until {stamp(expires)}, "
-              f"approved by @{approval['user']} in {record['url']}")
+              f"approved by @{approval['user']}{own} in {record['url']}")
     return "deviation", reason, deviation
 
 
@@ -291,7 +297,8 @@ def state_observation(context, state):
 
 def pr_observation(context, pr):
     outcome = {"MERGED": "merged", "CLOSED": "closed without merge (refused)", "OPEN": "open (pending)"}
-    approvals = sorted(review["user"] for review in ex.latest_reviews(pr.get("reviews", [])).values()
+    approvals = sorted(review["user"] for review in
+                       ex.latest_reviews(pr.get("reviews", []), context.self_approval).values()
                        if review["state"] == "APPROVED")
     files = ", ".join(path.rsplit("/", 1)[-1] for path in pr.get("files", []))
     description = (f"Pull request #{pr['number']} by @{pr['author']}, {outcome.get(pr['state'], pr['state'])}: "
@@ -337,7 +344,8 @@ def judge_process(context, requirement):
             continue
         if requirement == "UMS.5.1":
             problems += [f"{name}: {error}" for error in
-                         ex.decision_errors(document, record["author"], record["headSha"], record["reviews"])]
+                         ex.decision_errors(document, record["author"], record["headSha"], record["reviews"],
+                                            context.self_approval)]
         else:
             missing = [key for key in ("requirements", "justification", "riskStatement", "riskOwner", "expiresOn")
                        if not document.get(key)]
@@ -351,7 +359,8 @@ def judge_process(context, requirement):
         return "not-fulfilled", "; ".join(problems), observations, None
     refused = sum(1 for pr in context.pull_requests if pr["state"] == "CLOSED")
     pending = sum(1 for pr in context.pull_requests if pr["state"] == "OPEN")
-    reason = (f"{len(names)} exemption(s) in force and each meets the check ({PROCESS[requirement]}); "
+    check = LAB_UMS_5_1 if requirement == "UMS.5.1" and context.self_approval else PROCESS[requirement]
+    reason = (f"{len(names)} exemption(s) in force and each meets the check ({check}); "
               f"{refused} request(s) refused, {pending} pending")
     return "fulfilled", reason, observations, None
 
@@ -539,7 +548,7 @@ def input_ref(path):
 
 
 def generate(snapshot_path, exemptions_dir, initiative_path=None, catalogue_path=None, scope_path=None,
-             as_of=None, max_age_hours=DEFAULT_MAX_AGE_HOURS):
+             as_of=None, max_age_hours=DEFAULT_MAX_AGE_HOURS, self_approval=False):
     """Return (pack, summary text, results). Same inputs give the same bytes."""
     snapshot_bytes = Path(snapshot_path).read_bytes()
     snapshot = json.loads(snapshot_bytes.decode("utf-8"))
@@ -582,7 +591,7 @@ def generate(snapshot_path, exemptions_dir, initiative_path=None, catalogue_path
     if moment is None:
         raise SystemExit("no valid --as-of and no collectedAt in the snapshot")
     context = Context(snapshot, documents, initiative["references"] if initiative else None, verbs, scope,
-                      moment, max_age_hours, Path(exemptions_dir).name)
+                      moment, max_age_hours, Path(exemptions_dir).name, self_approval)
     results = evaluate(context)
     return build_pack(context, results, inputs), summary(context, results), results
 
@@ -635,6 +644,7 @@ def command_generate(args):
     pack, text, results = generate(
         args.snapshot, args.exemptions_dir or config.get("exemptionsDir") or "exemptions",
         args.initiative or config.get("initiative"), catalogue, args.scope, args.as_of, args.max_age_hours,
+        bool(config.get("selfApproval")),
     )
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(dump(pack), encoding="utf-8", newline="\n")

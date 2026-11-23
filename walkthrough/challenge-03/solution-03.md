@@ -51,35 +51,36 @@ Expected: the request fails with `RequestDisallowedByPolicy`, naming assignment 
 ```powershell
 $kit       = (Get-Location).Path
 $repoDir   = Join-Path $HOME 'lab-exceptions'
-$riskOwner = Read-Host 'GitHub login of the risk owner'
+$owner     = gh api user --jq .login
+$riskOwner = $owner     # lab self-approval: you are the risk owner
 python tools/exemptions/exemptions.py init-repo $repoDir --resource-group $group `
-  --initiative resources/archetype-initiative/policyset.json
+  --initiative resources/archetype-initiative/policyset.json --self-approval
 Set-Location $repoDir
 python tools/gspp_extract.py --output tools/out/gspp-extract.csv   # pinned catalogue for the modal-verb cross-check
 git init --initial-branch main
 git add .
 git commit -m "Exception repository"
 gh repo create lab-exceptions --private --source . --push     # --public on GitHub Free
-$owner = gh api user --jq .login
-gh api --method PUT "repos/$owner/lab-exceptions/collaborators/$riskOwner" -f permission=push
 ```
 
-The risk owner accepts the invitation. `init-repo` copies the tools (with the catalogue pin next to the extractor), the [workflow](../../resources/exemptions/exemption-check.yml), the [pull-request template](../../resources/exemptions/pull_request_template.md), the [schema](../../resources/exemptions/exemption.schema.json) and your initiative. It writes `lab.json` with your resource group as the only allowed scope. The repository holds no subscription or tenant ID.
+`init-repo` copies the tools (with the catalogue pin next to the extractor), the [workflow](../../resources/exemptions/exemption-check.yml), the [pull-request template](../../resources/exemptions/pull_request_template.md), the [schema](../../resources/exemptions/exemption.schema.json) and your initiative. It writes `lab.json` with your resource group as the only allowed scope and `"selfApproval": true`. The repository holds no subscription or tenant ID.
 
-Protect `main` so that nobody, including you as administrator, can merge an exemption without the risk owner:
+Protect `main` so that nobody, including you as administrator, can merge an exemption without a pull request that passes both checks:
 
 ```powershell
 @'
 {
   "required_status_checks": { "strict": false, "checks": [ { "context": "validate" }, { "context": "decision" } ] },
   "enforce_admins": true,
-  "required_pull_request_reviews": { "required_approving_review_count": 1, "dismiss_stale_reviews": true },
+  "required_pull_request_reviews": { "required_approving_review_count": 0, "dismiss_stale_reviews": true },
   "restrictions": null
 }
 '@ | gh api --method PUT "repos/$owner/lab-exceptions/branches/main/protection" --input -
 ```
 
-Administrators bypass branch protection unless `enforce_admins` is set ([GitHub Docs](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)).
+Administrators bypass branch protection unless `enforce_admins` is set ([GitHub Docs](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)). The required approval is the `decision` check, not a GitHub approving review, because GitHub does not let you approve your own pull request.
+
+**With a separate risk owner (production):** omit `--self-approval`, set `$riskOwner` to the other person's login, invite them with `gh api --method PUT "repos/$owner/lab-exceptions/collaborators/$riskOwner" -f permission=push`, and set `required_approving_review_count` to `1`. `decision` then refuses any request that its author approves.
 
 ## Task 3: Request the exemption
 
@@ -109,7 +110,7 @@ git push --set-upstream origin exc/legacy-client-transfer
 gh pr create --web
 ```
 
-Fill in the template in the browser and request a review from the risk owner. Expected: `validate` passes; `decision` fails with `WAITING  exemptions/exc-legacy-client-transfer.json: awaiting approval by risk owner @<login>`, and the merge button stays blocked.
+Fill in the template in the browser and create the pull request. Expected: `validate` passes; `decision` fails with `WAITING  exemptions/exc-legacy-client-transfer.json: awaiting approval by risk owner @<login>: submit a Comment review whose first line is /approve`, and the merge button stays blocked.
 
 ## Task 4: Two requests the check must refuse
 
@@ -148,15 +149,22 @@ The two KANN (optional) references, `encryption-infrastructure` (KONF.11.8) and 
 
 ## Task 5: Approve as risk owner and merge
 
-As the risk owner, open the first pull request, work through the checklist in its description and submit an **Approve** review. Expected: the review starts the workflow again and `decision` reports `APPROVED exemptions/exc-legacy-client-transfer.json by its risk owner on <commit>`. If the required check still shows the earlier failure, re-run the failed `decision` job from the pull request's **Checks** tab. Whether a review run updates the required check is not yet confirmed.
+As the risk owner, open the first pull request and work through the checklist in its description. Then record the decision as a **Comment** review on the current head commit, starting with `/approve`:
 
-Then merge, as the requester:
+```powershell
+gh pr review exc/legacy-client-transfer --comment --body "/approve
+I accept the risk of plain-HTTP access to this one account until the expiry."
+```
+
+Expected: the review starts the workflow again and `decision` reports `APPROVED exemptions/exc-legacy-client-transfer.json by its risk owner on <commit> (lab self-approval)`. If the required check still shows the earlier failure, re-run the failed `decision` job from the pull request's **Checks** tab. Whether a review run updates the required check is not yet confirmed.
+
+Then merge:
 
 ```powershell
 gh pr merge exc/legacy-client-transfer --merge
 ```
 
-A new commit after the approval dismisses the review, and `decision` fails again until the risk owner approves the new head.
+A new commit after the approval makes `decision` fail again until the risk owner approves the new head. A plain comment, or a comment that does not start with `/approve`, is not an approval. With a separate risk owner, that person submits a normal **Approve** review instead.
 
 ## Task 6: Create the exemption from main
 
@@ -187,7 +195,7 @@ az policy state list --resource-group $group --filter "policyAssignmentName eq '
   --output table
 ```
 
-Expected: category `Waiver`, your expiry, the pull-request link and the risk owner's login. The update that was denied in task 1 now succeeds, because the resource is exempt from that assignment's secure-transfer policy (inferred from the [exemption structure](https://learn.microsoft.com/azure/governance/policy/concepts/exemption-structure) page). `transport-secure-transfer` shows `Exempt`; `residency-allowed-locations` stays `Compliant`.
+Expected: category `Waiver`, your expiry, the pull-request link and the risk owner's login. Under lab self-approval the metadata also carries `approvalMode: lab-self-approval`. The update that was denied in task 1 now succeeds, because the resource is exempt from that assignment's secure-transfer policy (inferred from the [exemption structure](https://learn.microsoft.com/azure/governance/policy/concepts/exemption-structure) page). `transport-secure-transfer` shows `Exempt`; `residency-allowed-locations` stays `Compliant`.
 
 Continue with [challenge 4](../../challenges/challenge-04.md) now, while the exemption is in force, then come back for task 7.
 
@@ -224,6 +232,7 @@ Keep `lab-exceptions` as the decision record for challenge 4, or delete it when 
 
 | Shortcut | Why | Production answer |
 |---|---|---|
+| The requester approves as risk owner (`selfApproval` in `lab.json`) | One GitHub account can run the lab | A different, accountable risk owner: no `--self-approval`, one required approving review, risk owners as code owners for `exemptions/` |
 | `apply` runs from your shell after the merge | No pipeline identity to set up in a lab | A workflow on `main` with a federated identity that can only write policy exemptions in the target scope |
 | Required checks accept any source | Simpler protection setup | Pin GitHub Actions as the source of `validate` and `decision` |
 | A pull request can change `.github/` itself; the rules come from the base commit | Keeps the repository self-contained | Required workflows through rulesets, and code owners for `.github/` and `tools/` |

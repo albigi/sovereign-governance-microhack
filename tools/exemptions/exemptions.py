@@ -44,6 +44,8 @@ RESOURCE_GROUP_PATTERN = re.compile(r"^[-\w.()]{1,90}$")
 NAME_PATTERN = r"[A-Za-z0-9][A-Za-z0-9._-]*"
 RESOURCE_PATTERN = re.compile(rf"[A-Za-z][A-Za-z0-9.]+(?:/[A-Za-z0-9]+/{NAME_PATTERN})+")
 MIN_TEXT = 20
+# GitHub refuses an author's Approve review, so lab self-approval is a Comment review with this first line.
+APPROVAL_MARKER = "/approve"
 
 
 # ---------------------------------------------------------------- inputs
@@ -255,30 +257,46 @@ def validate_exemption(doc, stem, verbs, now=None, max_days=DEFAULT_MAX_DAYS,
     return errors
 
 
-def latest_reviews(reviews):
-    """Latest state-changing review per user (lower-cased login); plain comments change nothing."""
+def approval_marked(body):
+    lines = str(body or "").strip().splitlines()
+    return bool(lines) and lines[0].strip().lower() == APPROVAL_MARKER
+
+
+def latest_reviews(reviews, self_approval=False):
+    """Latest state-changing review per user (lower-cased login); plain comments change nothing.
+
+    With lab self-approval, a Comment review whose first line is /approve counts as an approval.
+    """
     latest = {}
     for review in sorted(reviews, key=lambda r: r.get("submittedAt") or ""):
-        if review.get("state") in ("APPROVED", "CHANGES_REQUESTED", "DISMISSED"):
-            latest[str(review.get("user", "")).lower()] = review
+        state = review.get("state")
+        if self_approval and state == "COMMENTED" and approval_marked(review.get("body")):
+            state = "APPROVED"
+        if state in ("APPROVED", "CHANGES_REQUESTED", "DISMISSED"):
+            latest[str(review.get("user", "")).lower()] = dict(review, state=state)
     return latest
 
 
-def approval_of(doc, reviews):
-    review = latest_reviews(reviews).get(str(doc.get("riskOwner", "")).lower())
+def approval_of(doc, reviews, self_approval=False):
+    review = latest_reviews(reviews, self_approval).get(str(doc.get("riskOwner", "")).lower())
     return review if review and review["state"] == "APPROVED" else None
 
 
-def decision_errors(doc, author, head_sha, reviews):
-    """Four-eyes rule: the named risk owner, who is not the author, approved the current head commit."""
+def decision_errors(doc, author, head_sha, reviews, self_approval=False):
+    """Four-eyes rule: the named risk owner, who is not the author, approved the current head commit.
+
+    Lab self-approval (selfApproval in lab.json) lets the author be the risk owner, so one account can run
+    the lab; production keeps a different person.
+    """
     owner = str(doc.get("riskOwner", ""))
     if not owner:
         return ["no riskOwner named"]
-    if owner.lower() == str(author).lower():
+    if owner.lower() == str(author).lower() and not self_approval:
         return [f"risk owner @{owner} opened the pull request: a different person must approve"]
-    review = approval_of(doc, reviews)
+    review = approval_of(doc, reviews, self_approval)
     if review is None:
-        return [f"awaiting approval by risk owner @{owner}"]
+        how = f": submit a Comment review whose first line is {APPROVAL_MARKER}" if self_approval else ""
+        return [f"awaiting approval by risk owner @{owner}{how}"]
     if review.get("commitId") != head_sha:
         return [
             f"@{owner} approved commit {str(review.get('commitId'))[:7]}, not the current head "
@@ -313,7 +331,7 @@ def run_json(command):
 def fetch_reviews(repo, number):
     output = run([
         "gh", "api", f"repos/{repo}/pulls/{number}/reviews", "--paginate", "--jq",
-        ".[] | {user: .user.login, state: .state, commitId: .commit_id, submittedAt: .submitted_at}",
+        ".[] | {user: .user.login, state: .state, commitId: .commit_id, submittedAt: .submitted_at, body: .body}",
     ])
     return [json.loads(line) for line in output.splitlines() if line.strip()]
 
@@ -417,7 +435,9 @@ def command_validate(args):
 def command_decision(args):
     pr = run_json(["gh", "pr", "view", str(args.pr), "--repo", args.repo, "--json", "author,headRefOid,files"])
     reviews = fetch_reviews(args.repo, args.pr)
-    directory, _, _ = settings(args, load_config(args.config))
+    config = load_config(args.config)
+    directory, _, _ = settings(args, config)
+    self_approval = bool(config.get("selfApproval"))
     author = pr["author"]["login"]
     failed = checked = 0
     for item in pr["files"]:
@@ -428,31 +448,35 @@ def command_decision(args):
             print(f"WITHDRAWN {path.as_posix()} (removing an exemption needs no risk-owner approval)")
             continue
         checked += 1
-        errors = decision_errors(load_exemption(path), author, pr["headRefOid"], reviews)
+        errors = decision_errors(load_exemption(path), author, pr["headRefOid"], reviews, self_approval)
         if errors:
             failed += 1
             print(f"WAITING  {path.as_posix()}: {'; '.join(errors)}")
         else:
-            print(f"APPROVED {path.as_posix()} by its risk owner on {pr['headRefOid'][:7]}")
+            lab = " (lab self-approval)" if self_approval else ""
+            print(f"APPROVED {path.as_posix()} by its risk owner on {pr['headRefOid'][:7]}{lab}")
     if not checked:
         print("no added or changed exemption files")
     return 1 if failed else 0
 
 
 def exemption_body(doc, assignment_id, record, approval):
+    metadata = {
+        "managedBy": MANAGED_BY,
+        "requirements": ",".join(doc["requirements"]),
+        "riskOwner": doc["riskOwner"],
+        "decisionRecord": record["url"],
+        "requestedBy": record["author"],
+        "approvedBy": approval["user"],
+        "approvedOn": approval.get("submittedAt") or "",
+    }
+    if str(approval["user"]).lower() == str(record["author"]).lower():
+        metadata["approvalMode"] = "lab-self-approval"
     return {
         "properties": {
             "displayName": doc["title"],
             "description": doc["justification"][:512],
-            "metadata": {
-                "managedBy": MANAGED_BY,
-                "requirements": ",".join(doc["requirements"]),
-                "riskOwner": doc["riskOwner"],
-                "decisionRecord": record["url"],
-                "requestedBy": record["author"],
-                "approvedBy": approval["user"],
-                "approvedOn": approval.get("submittedAt") or "",
-            },
+            "metadata": metadata,
             "policyAssignmentId": assignment_id,
             "policyDefinitionReferenceIds": doc["policyDefinitionReferenceIds"],
             "exemptionCategory": doc["category"],
@@ -475,7 +499,8 @@ def resolve_assignment(subscription, doc):
     return url
 
 
-def plan_apply(files, pull_requests, verbs, references, now, max_days, allowed, folder="exemptions"):
+def plan_apply(files, pull_requests, verbs, references, now, max_days, allowed, folder="exemptions",
+               self_approval=False):
     """Decide offline which files may become Azure exemptions: (to_apply, expired, refused)."""
     to_apply, expired, refused = [], [], []
     for path in files:
@@ -492,11 +517,11 @@ def plan_apply(files, pull_requests, verbs, references, now, max_days, allowed, 
         if record is None:
             errors.append("no merged pull request changed this file: no decision record")
         else:
-            errors += decision_errors(doc, record["author"], record["headSha"], record["reviews"])
+            errors += decision_errors(doc, record["author"], record["headSha"], record["reviews"], self_approval)
         if errors:
             refused.append((doc, errors))
         else:
-            to_apply.append((doc, record, approval_of(doc, record["reviews"])))
+            to_apply.append((doc, record, approval_of(doc, record["reviews"], self_approval)))
     return to_apply, expired, refused
 
 
@@ -524,6 +549,7 @@ def command_apply(args):
     to_apply, expired, refused = plan_apply(
         exemption_files(directory), pull_requests, verbs, references,
         datetime.now(timezone.utc), max_days, allowed, directory.name,
+        bool(load_config(args.config).get("selfApproval")),
     )
     for doc in expired:
         print(f"EXPIRED  {doc['id']}: not created (Azure keeps an expired exemption as a record only)")
@@ -587,16 +613,24 @@ def command_init_repo(args):
         "exemptionsDir": "exemptions",
         "allowedResourceGroups": args.resource_group,
         "maxDays": args.max_days,
+        "selfApproval": args.self_approval,
         "initiative": "policy/initiative.json",
         "catalogue": "tools/out/gspp-extract.csv",
     }
     (target / "lab.json").write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
     (target / ".gitignore").write_text("tools/out/\nout/\n__pycache__/\n", encoding="utf-8")
+    approver = (
+        "risk owner. Lab self-approval is on (`selfApproval` in `lab.json`): the requester may be the risk\n"
+        f"owner and approves with a Comment review whose first line is `{APPROVAL_MARKER}`. Production needs a\n"
+        "different person.\n"
+        if args.self_approval else "risk owner, who must not be the requester.\n"
+    )
     (target / "README.md").write_text(
         "# Exception repository\n\n"
         "Each file in `exemptions/` is a time-boxed Azure Policy exemption. The pull request that adds it is\n"
         "the decision record: CI job `validate` applies the rules and CI job `decision` waits for the named\n"
-        "risk owner. After merge, run `python tools/exemptions.py apply` on `main`.\n"
+        + approver +
+        "After merge, run `python tools/exemptions.py apply` on `main`.\n"
         "This repository holds no subscription or tenant IDs.\n",
         encoding="utf-8",
     )
@@ -643,6 +677,8 @@ def build_parser():
     init.add_argument("--resource-group", action="append", required=True, help="lab resource group (repeatable)")
     init.add_argument("--initiative", required=True, help="policy set definition JSON from challenge 2")
     init.add_argument("--max-days", type=int, default=DEFAULT_MAX_DAYS)
+    init.add_argument("--self-approval", action="store_true",
+                      help="lab only: let the requester approve as risk owner, so one account can run the lab")
     init.set_defaults(handler=command_init_repo)
     return parser
 

@@ -110,7 +110,7 @@ Expected for KONF.14.1 (fixture values shown):
 
 An exempt resource does not fulfil the requirement. The pack records an approved deviation only for explicitly cited SOLLTE groups: the named risk owner must have approved the final commit of the merged request, and the Azure exemption must still match its scope, assignment, policy references, category and expiry. Otherwise the finding has no `deviation` property and its basis names the missing evidence or mismatch. UMS.5.1 checks who approved; it does not by itself prove that the deployed exemption still matches the file.
 
-UMS.5.1 (MUSS) has no Azure Policy result at all. It is fulfilled by named human decisions: every exemption in force was approved by its risk owner. The basis counts the refused requests from challenge 3 as well. An exemption without a kit decision record in force over your lab, for example an inherited one, makes UMS.5.1 not fulfilled.
+UMS.5.1 (MUSS) has no Azure Policy result at all. It is fulfilled by named human decisions: every exemption in force was approved by its risk owner. The basis counts the refused requests from challenge 3 as well. An exemption without a kit decision record in force over your lab, for example an inherited one, makes UMS.5.1 not fulfilled. Because your exception repository uses lab self-approval, the basis and the deviation say so: an auditor would not accept a self-approved exception, and without `selfApproval` the same pull request leaves UMS.5.1 not fulfilled.
 
 ## Task 5: Reproduce, then let the evidence age
 

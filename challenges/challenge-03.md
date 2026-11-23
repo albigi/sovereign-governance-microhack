@@ -13,9 +13,11 @@ Some applications cannot meet a requirement yet. In this challenge an exception 
 | Check | Passes only when |
 |---|---|
 | `validate` | Every requirement behind the named policy reference is listed and is SOLLTE; the expiry is set and at most 90 days ahead; the scope is inside your lab resource group. The requirements come from the initiative of challenge 2, so a request cannot hide a MUSS requirement behind a policy that also implements a SOLLTE one. |
-| `decision` | The named risk owner, who did not open the request, approved the current head commit. |
+| `decision` | The named risk owner approved the current head commit. In production the risk owner must not have opened the request; this lab lets one account act as both (see below). |
 
 After the merge you create the Azure Policy exemption from `main`. It carries the expiry and a link to its pull request, and stops applying on its expiry date. Azure Policy makes expiry optional; this lab makes it mandatory.
+
+**Lab self-approval.** So that you can run the lab alone, the exception repository is created with `--self-approval`: you name yourself as risk owner and approve with a pull-request **Comment** review whose first line is `/approve`, because GitHub does not let authors approve their own pull requests. The decision record, Azure metadata and evidence pack all mark such an approval as lab self-approval. In a real organisation the risk owner is a different, accountable person: create the repository without `--self-approval`, and the check refuses a request approved by its author.
 
 ## Prerequisites
 
@@ -24,15 +26,15 @@ After the merge you create the Azure Policy exemption from `main`. It carries th
 - PowerShell 7 with Azure CLI and GitHub CLI signed in, Python 3.9 or later, and Git.
 - An Azure identity that can create a storage account and policy exemptions in the lab group, for example Contributor plus Resource Policy Contributor on the group.
 - A new GitHub repository you administer whose `main` branch can be protected: public on GitHub Free, or private on GitHub Pro, Team or Enterprise.
-- A second person, or a second GitHub account, with write access to that repository as risk owner.
+- Optional: a second person or GitHub account with write access to that repository, to practise a separate risk owner. One account is enough for the lab.
 
 ## Actions
 
 - Create a compliant storage account in your lab group. Try to switch off its secure-transfer setting and read why Azure Policy denies it.
-- Create your exception repository with `tools/exemptions/exemptions.py init-repo`, push it and protect `main`: one approving review, required checks `validate` and `decision`, no bypass for administrators.
+- Create your exception repository with `tools/exemptions/exemptions.py init-repo --self-approval`, push it and protect `main`: changes only by pull request, required checks `validate` and `decision`, no bypass for administrators.
 - Request an exemption from the secure-transfer requirements for that one storage account with a short expiry, using the template and schema in `resources/exemptions/`.
 - Open two more requests: one for a storage location outside the allowed regions and one without an expiry. Read why the check refuses each.
-- Let the risk owner approve the valid request, merge it and create the exemption with `exemptions.py apply` from `main`.
+- Approve the valid request as its risk owner, merge it and create the exemption with `exemptions.py apply` from `main`.
 - Confirm that the storage account shows as exempt. After the expiry, confirm that the exemption no longer applies.
 
 ## Success criteria

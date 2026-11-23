@@ -6,7 +6,7 @@
 - Requirement IDs and modal verb (only SOLLTE can be exempted):
 - Resource group and resource:
 - Expiry (UTC, at most the lab maximum ahead):
-- Risk owner (GitHub login, not the author): @
+- Risk owner (GitHub login; not the author unless `lab.json` sets lab-only `selfApproval`): @
 
 ## Why the requirement cannot be met yet
 
@@ -18,9 +18,9 @@
 
 ## Risk owner checklist
 
-The approving review is the decision record. Approve only when all of these hold:
+The approving review is the decision record. Under lab self-approval, it is a **Comment** review whose first line is `/approve`. Approve only when all of these hold:
 
-- [ ] I am the named risk owner and I did not open this pull request.
+- [ ] I am the named risk owner and I did not open this pull request (lab self-approval: I may have opened it).
 - [ ] Every requirement behind the named policy references is listed, and none is MUSS or KANN.
 - [ ] The scope is the smallest that works: one resource where possible.
 - [ ] The expiry is the earliest date that works, and the plan to end the exemption is credible.

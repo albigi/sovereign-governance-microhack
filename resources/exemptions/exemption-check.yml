@@ -1,5 +1,7 @@
 # Exemption check for an exception repository created by `exemptions.py init-repo`.
-# Make both jobs required status checks on main and require one approving review.
+# Make both jobs required status checks on main. With a separate risk owner, also require one approving
+# review. With lab self-approval (selfApproval in lab.json) require a pull request with zero approvals:
+# GitHub does not let authors approve their own pull requests, so `decision` reads an /approve comment review.
 # The rules (tools/, policy/, lab.json) are taken from the base commit, so a pull request
 # cannot loosen the rules it is judged by. Changes to .github/ itself still need a reviewer.
 name: exemption-check
