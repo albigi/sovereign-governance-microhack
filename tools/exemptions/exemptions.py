@@ -683,9 +683,25 @@ def build_parser():
     return parser
 
 
+def run_handler(args):
+    """Run a subcommand; report a failed gh or az call in one line instead of a traceback."""
+    try:
+        return args.handler(args)
+    except subprocess.CalledProcessError as error:
+        command = [str(part) for part in error.cmd] if isinstance(error.cmd, list) else [str(error.cmd)]
+        command[0] = re.sub(r"\.exe$", "", re.split(r"[\\/]", command[0])[-1], flags=re.IGNORECASE)
+        detail = (error.stderr or "").strip().splitlines()
+        raise SystemExit(
+            f"ERROR    '{' '.join(command)}' failed (exit {error.returncode})"
+            + (f": {detail[-1]}" if detail else "")
+            + "\n         Check that `gh auth status` shows the account that owns this repository"
+            " and `az account show` the lab subscription."
+        ) from None
+
+
 def main(argv=None):
     args = build_parser().parse_args(argv)
-    return args.handler(args)
+    return run_handler(args)
 
 
 if __name__ == "__main__":

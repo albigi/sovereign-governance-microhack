@@ -1,6 +1,6 @@
 # **From Requirement to Evidence: governing sovereign requirements on Azure**
 
-> **Status (23 Nov 2026): offline rehearsal complete; first live Azure run in progress.** The [validation record](walkthrough/validation-run.md) distinguishes observed policy results from pending checks. Exception approval and expiry, complete evidence collection, billed cost and teardown are not yet validated.
+> **Status (23 Nov 2026): challenges 1 to 4 validated end to end in one live Azure run by the maintainer.** The [validation record](walkthrough/validation-run.md) lists every observation. The lab teardown, billed cost and a run by a first-time participant are still pending.
 
 An architect can take a sovereign requirement set (BSI Grundschutz++ and C5), decide which requirements apply to an application, enforce them with native Azure Policy by a stated decision rule, handle a justified exception as a reviewed pull request, and generate machine-readable audit evidence as a by-product.
 

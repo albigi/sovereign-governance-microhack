@@ -1,6 +1,6 @@
 # Walkthrough Challenge 2 - Enforce Applicable Requirements with Azure Policy by a Decision Rule
 
-> **Status: partial live validation (23 Nov 2026).** The subscription policy set and Corp assignment are deployed; all 13 assigned parameters match the generated doctrine. Steps A1 to D behaved as expected, including the public-network Deny once an inherited tenant Modify policy was excluded, and the full compliance scan matched the table below. Exceptions, evidence and teardown remain pending. See the [validation record](../validation-run.md).
+> **Status: partial live validation (23 Nov 2026).** The subscription policy set and Corp assignment are deployed; all 13 assigned parameters match the generated doctrine. Steps A1 to D behaved as expected, including the public-network Deny once an inherited tenant Modify policy was excluded, and the full compliance scan matched the table below. The lab teardown remains pending. See the [validation record](../validation-run.md).
 
 **Estimated duration:** to be measured in the [validation run](../validation-run.md); its offline rehearsal times commands, not the sandbox tasks. Policy evaluation alone adds waits of about 5 and 15 minutes (task 3 and task 4).
 

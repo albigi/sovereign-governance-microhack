@@ -1,6 +1,6 @@
 # Challenge 2 - Enforce Applicable Requirements with Azure Policy by a Decision Rule
 
-> **Status: draft (20 Nov 2026).** Decision rule, classifier and initiative are validated offline (tests, catalogue check, Bicep build). The walkthrough has not yet run in a sandbox; its Azure outputs are expected, not measured.
+> **Status: validated live (23 Nov 2026).** Decision rule, classifier and initiative pass the offline tests; the walkthrough ran in a sandbox and its Azure outputs match. See the [validation record](../walkthrough/validation-run.md).
 
 **Learning objective:** choose an Azure Policy effect (`deny`, `audit`, `modify`, `deployIfNotExists`, `auditIfNotExists`) and a deviation path for each requirement from its modal verb, its checkability and the archetype, and explain where Azure Policy alone gives false assurance.
 

@@ -1,6 +1,6 @@
 # Challenge 3 - Handle a Justified Exception as a Reviewed Pull Request
 
-> **Status: written, not yet run in a sandbox.** The [validation run](../walkthrough/validation-run.md) records the first measured run.
+> **Status: validated live (23 Nov 2026)** with lab self-approval. See the [validation record](../walkthrough/validation-run.md).
 
 **Learning objective:** raise, review and expire an Azure Policy exemption as code, with the reviewed pull request as the decision record, and explain why a must-level (MUSS) requirement has no exception path.
 

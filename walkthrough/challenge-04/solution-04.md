@@ -1,6 +1,6 @@
 # Walkthrough Challenge 4 - Generate Audit Evidence as a By-product of Change
 
-> **Status: written, not yet run in a sandbox.** Offline outputs below come from the tested fixtures in [`tools/exemptions/fixtures/`](../../tools/exemptions/fixtures/); Azure and GitHub outputs are expected results until the [validation run](../validation-run.md) records them.
+> **Status: tasks 1 to 6 validated live (23 Nov 2026).** Task 1 and the JSON example in task 4 use the fixtures in [`tools/exemptions/fixtures/`](../../tools/exemptions/fixtures/); the other outputs match the live run. See the [validation record](../validation-run.md).
 
 **Estimated duration:** to be measured in the [validation run](../validation-run.md).
 
@@ -72,7 +72,7 @@ $scopeFile = Join-Path $kit 'tools/gspp/out/applicability-leave-planner.json'
 python tools/evidence.py generate --snapshot out/snapshot.json --scope $scopeFile --summary out/evidence.md
 ```
 
-Expected: `Wrote out/evidence.oscal.json:` followed by counts per status that add up to the requirements in your applicability file: 23 for the leave planner, 6 of them not applicable. For comparison, the fixture snapshot with the leave-planner scope gives `2 fulfilled, 6 not-applicable, 2 not-fulfilled, 13 unresolved`.
+Expected: `Wrote out/evidence.oscal.json:` followed by counts per status that add up to the requirements in your applicability file: 23 for the leave planner, 6 of them not applicable. The live run gave `2 fulfilled, 6 not-applicable, 2 not-fulfilled, 13 unresolved`, the same counts as the fixture snapshot with the leave-planner scope.
 
 Read two different questions in each finding: **why is it in scope?** (`applicability-reason`, from challenge 1) and **what was observed?** (the finding's basis and linked observations). `policy_coverage` describes candidate definitions, not observations. Even `full` with no matching observation stays unresolved. For BES.2.2, the location check is compliant but covers only part of the requirement. Conversely, `none` does not rule out other sources: the approved pull request provides process evidence for UMS.5.1. This collector does not import Entra logs, Purview records or manual attestations; requirements that need those sources stay unresolved here.
 
@@ -134,18 +134,18 @@ python tools/evidence.py generate --snapshot out/snapshot.json --scope $scopeFil
 python tools/evidence.py compare out/evidence.oscal.json out/later.oscal.json
 ```
 
-Expected: every status that rested on policy results or exemptions turns `unresolved`, and `compare` exits with code 1. With the fixtures:
+Expected: every status that rested on policy results or exemptions turns `unresolved`, and `compare` exits with code 1. With the leave-planner scope, as in the live run:
 
 ```text
 files differ in bytes
-BES.2.2: fulfilled -> unresolved
-KONF.14.1: not-fulfilled (approved-temporary until 2026-12-04T00:00:00Z) -> unresolved
-KONF.14.1.1: not-fulfilled (approved-temporary until 2026-12-04T00:00:00Z) -> unresolved
-STM.2.1.7: fulfilled -> unresolved
+KONF.14.1: not-fulfilled (approved-temporary until <expiry>) -> unresolved
+KONF.14.1.1: not-fulfilled (approved-temporary until <expiry>) -> unresolved
 UMS.5.1: fulfilled -> unresolved
 UMS.5.2: fulfilled -> unresolved
-6 status difference(s)
+4 status difference(s)
 ```
+
+With the fixture scope of task 1, BES.2.2 and STM.2.1.7 also turn `unresolved`: 6 differences.
 
 Evidence older than 36 hours proves nothing about today. Use `--max-age-hours` to set your own limit.
 
@@ -159,12 +159,12 @@ python tools/evidence.py generate --snapshot out/after-expiry.json --scope $scop
 python tools/evidence.py compare out/evidence.oscal.json out/after.oscal.json
 ```
 
-Expected, with fixture values:
+Expected, as in the live run:
 
 ```text
 files differ in bytes
-KONF.14.1: not-fulfilled (approved-temporary until 2026-12-04T00:00:00Z) -> not-fulfilled
-KONF.14.1.1: not-fulfilled (approved-temporary until 2026-12-04T00:00:00Z) -> not-fulfilled
+KONF.14.1: not-fulfilled (approved-temporary until <expiry>) -> not-fulfilled
+KONF.14.1.1: not-fulfilled (approved-temporary until <expiry>) -> not-fulfilled
 2 status difference(s)
 ```
 

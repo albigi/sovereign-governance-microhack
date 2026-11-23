@@ -1,6 +1,6 @@
 # Live validation record
 
-**Status (23 Nov 2026): partial.** Offline tests pass. Challenge 2 and challenge 3 task 1 behaved as expected in an isolated Azure run. The exception approval workflow, evidence-pack collection and cleanup have not been validated yet. This is a lab observation, not an assurance or compliance claim.
+**Status (23 Nov 2026): challenges 1 to 4 validated live.** Offline tests pass. Every Azure and GitHub step of challenges 2 to 4 behaved as the walkthroughs state in one isolated Azure run by the maintainer. The lab teardown, attributable cost and a run by a first-time participant are pending. This is a lab observation, not an assurance or compliance claim.
 
 ## Live Azure results
 
@@ -17,13 +17,35 @@ The run used one disposable resource group in Germany West Central. Identifiers 
 | Key Vault diagnostics | The `setByPolicy-LogAnalytics` diagnostic setting appeared, with the audit category routed to the lab workspace | Pass |
 | Compliance scan | All `gspp-corp` states match the challenge 2 table: only `encryption-infrastructure` (B) and `backup-geo-redundant-storage` (B, C) are non-compliant | Pass |
 | Challenge 3, task 1 | Compliant account created; disabling secure transfer rejected by `transport-secure-transfer` | Pass |
-| Exception approval, evidence, cleanup and cost | Not completed or not yet attributable | Pending |
+| Challenge 3, task 2 | Exception repository created with lab self-approval. Branch protection on a private repository under GitHub Free returned HTTP 403; the run continued without it | Pass, unprotected |
+| Challenge 3, task 3 | In GitHub Actions, `validate` passed and `decision` reported `WAITING` with the `/approve` hint | Pass |
+| Challenge 3, task 4 | Residency request refused (STM.2.1.7 is MUSS); request without expiry refused; both closed unmerged | Pass |
+| Challenge 3, task 5 | A Comment review starting `/approve` started a second run whose `decision` reported `APPROVED … (lab self-approval)`. The first run's failed `decision` stayed listed until re-run; the re-run also passed | Pass |
+| Challenge 3, task 6 | `apply` created the Waiver with expiry, decision link, approver and `approvalMode: lab-self-approval`; the update denied in task 1 then succeeded; `transport-secure-transfer` became `Exempt` | Pass |
+| Challenge 3, task 7 | After the expiry, a scan showed `transport-secure-transfer` `NonCompliant`; `apply --dry-run` reported `EXPIRED` and created nothing; secure transfer restored | Pass |
+| Challenge 3, task 8 | Exemption and exception storage account deleted; no exemption left in the group | Pass |
+| Challenge 4, tasks 2 and 3 | Snapshot: 1 exemption (none inherited), 3 exception pull requests. Pack: 2 fulfilled, 6 not applicable, 2 not fulfilled, 13 unresolved | Pass |
+| Challenge 4, task 4 | KONF.14.1 recorded as `approved-temporary`, its basis disclosing lab self-approval; UMS.5.1 fulfilled with 2 refused requests counted | Pass |
+| Challenge 4, task 5 | Regenerating gave byte-identical output; evaluating 48 hours later turned 4 statuses `unresolved` | Pass |
+| Challenge 4, task 6 | After the expiry, KONF.14.1 and KONF.14.1.1 lost the approved deviation; UMS.5.1 counted 0 exemptions in force | Pass |
+| Lab teardown and attributable cost | Not yet run; billing data not yet attributable | Pending |
 
 Hosting tenants can assign their own Modify or Deny policies that run before or beside the lab's. The tests touched only resources created for this run; pre-existing resources were not changed.
 
+## Timing
+
+Measured by the maintainer, not by a first-time participant:
+
+| Step | Duration |
+|---|---|
+| One `az policy state trigger-scan` on the lab group | About 12 minutes, twice |
+| Challenge 3 tasks 2 to 6, scripted, excluding scans | About 10 minutes |
+| GitHub Actions run of both checks | Under 1 minute |
+| Wait from task 6 to the exemption expiry | The expiry you choose; the walkthrough uses 3 hours, the validation run used 100 minutes |
+
 ## Local checks
 
-From the repository root, the four focused suites passed: GS++ (30 tests), doctrine (32), OSCAL (7, 2 skipped), and exemptions (45, 1 skipped). The lab automation safety harness passed. Challenge 1 extracted the pinned catalogue, generated all 10 profiles, checked 81 requirement-ID uses across four files, and found no copied catalogue text. The doctrine check passed.
+From the repository root, the four focused suites passed: GS++ (30 tests), doctrine (32), OSCAL (7, 2 skipped), and exemptions (49, 1 skipped). The lab automation safety harness passed. Challenge 1 extracted the pinned catalogue, generated all 10 profiles, checked 81 requirement-ID uses across four files, and found no copied catalogue text. The doctrine check passed.
 
 ```powershell
 python -m unittest discover -s tools\gspp -p test_*.py -q

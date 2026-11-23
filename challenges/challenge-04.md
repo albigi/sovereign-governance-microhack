@@ -1,6 +1,6 @@
 # Challenge 4 - Generate Audit Evidence as a By-product of Change
 
-> **Status: written, not yet run in a sandbox.** The [validation run](../walkthrough/validation-run.md) records the first measured run.
+> **Status: validated live (23 Nov 2026).** See the [validation record](../walkthrough/validation-run.md).
 
 **Learning objective:** generate a reproducible, machine-readable evidence pack from Azure Policy compliance state and pull-request history, and explain why missing or stale evidence must never read as fulfilled.
 

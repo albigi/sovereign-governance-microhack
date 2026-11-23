@@ -1,6 +1,6 @@
 # Walkthrough Challenge 3 - Handle a Justified Exception as a Reviewed Pull Request
 
-> **Status: task 1 validated live (23 Nov 2026); tasks 2 to 8 not yet run in a sandbox.** Commands and expected outputs follow the tested tools in [`tools/exemptions/`](../../tools/exemptions/); Azure and GitHub outputs are expected results until the [validation run](../validation-run.md) records them.
+> **Status: tasks 1 to 8 validated live (23 Nov 2026)** with lab self-approval and a private exception repository without branch protection. Outputs below match that run; your names and times differ. See the [validation record](../validation-run.md).
 
 **Estimated duration:** to be measured in the [validation run](../validation-run.md).
 
@@ -28,7 +28,7 @@ $location = az group show --name $group --query location --output tsv
 az storage account create --name $account --resource-group $group --location $location `
   --sku Standard_LRS --kind StorageV2 --https-only true --min-tls-version TLS1_2 `
   --public-network-access Disabled --output none
-az policy state trigger-scan --resource-group $group     # waits until the scan completes; takes minutes
+az policy state trigger-scan --resource-group $group     # waits until the scan completes: about 12 minutes in the validation run
 az policy state list --resource-group $group --filter "policyAssignmentName eq 'gspp-corp'" `
   --query "[?contains(resourceId, '$account')].{reference: policyDefinitionReferenceId, state: complianceState}" `
   --output table
@@ -79,6 +79,8 @@ Protect `main` so that nobody, including you as administrator, can merge an exem
 ```
 
 Administrators bypass branch protection unless `enforce_admins` is set ([GitHub Docs](https://docs.github.com/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)). The required approval is the `decision` check, not a GitHub approving review, because GitHub does not let you approve your own pull request.
+
+On GitHub Free, a private repository refuses this call with HTTP 403 `Upgrade to GitHub Pro or make this repository public`. Either create the repository with `--public`, or keep it private without protection: both checks still run and report on every pull request, but nothing then blocks a merge, so you must wait for them yourself.
 
 **With a separate risk owner (production):** omit `--self-approval`, set `$riskOwner` to the other person's login, invite them with `gh api --method PUT "repos/$owner/lab-exceptions/collaborators/$riskOwner" -f permission=push`, and set `required_approving_review_count` to `1`. `decision` then refuses any request that its author approves.
 
@@ -143,7 +145,7 @@ REFUSED exemptions/exc-no-expiry.json
   - missing required fields: expiresOn
 ```
 
-The residency request names only BES.2.2 (SOLLTE). The check reads the policy groups of the initiative, finds the binding external obligation STM.2.1.7 (MUSS) behind the same policy, and refuses. Adding STM.2.1.7 to the request does not help, because MUSS has no exception path. Close both pull requests unmerged: they stay in the history as refused requests.
+The residency request names only BES.2.2 (SOLLTE). The check reads the policy groups of the initiative, finds the binding external obligation STM.2.1.7 (MUSS) behind the same policy, and refuses. Adding STM.2.1.7 to the request does not help, because MUSS has no exception path. `decision` also stays at `WAITING` on both, because nobody approved them. Close both pull requests unmerged: they stay in the history as refused requests.
 
 The two KANN (optional) references, `encryption-infrastructure` (KONF.11.8) and `backup-geo-redundant-storage` (NOT.4.12), also cannot be waived. Optional requirements are selected through the archetype, not through an exemption. The offline tests exercise both; you do not need to open more pull requests.
 
@@ -156,7 +158,13 @@ gh pr review exc/legacy-client-transfer --comment --body "/approve
 I accept the risk of plain-HTTP access to this one account until the expiry."
 ```
 
-Expected: the review starts the workflow again and `decision` reports `APPROVED exemptions/exc-legacy-client-transfer.json by its risk owner on <commit> (lab self-approval)`. If the required check still shows the earlier failure, re-run the failed `decision` job from the pull request's **Checks** tab. Whether a review run updates the required check is not yet confirmed.
+Expected: the review starts a second workflow run, whose `decision` reports `APPROVED exemptions/exc-legacy-client-transfer.json by its risk owner on <commit> (lab self-approval)`. The first run's failed `decision` stays listed on the same commit. Re-run it so that every `decision` check on the head is green before you merge:
+
+```powershell
+$run = gh run list --branch exc/legacy-client-transfer --event pull_request --limit 1 --json databaseId --jq '.[0].databaseId'
+gh run rerun $run --failed
+gh pr checks exc/legacy-client-transfer --watch
+```
 
 Then merge:
 
@@ -195,7 +203,7 @@ az policy state list --resource-group $group --filter "policyAssignmentName eq '
   --output table
 ```
 
-Expected: category `Waiver`, your expiry, the pull-request link and the risk owner's login. Under lab self-approval the metadata also carries `approvalMode: lab-self-approval`. The update that was denied in task 1 now succeeds, because the resource is exempt from that assignment's secure-transfer policy (inferred from the [exemption structure](https://learn.microsoft.com/azure/governance/policy/concepts/exemption-structure) page). `transport-secure-transfer` shows `Exempt`; `residency-allowed-locations` stays `Compliant`.
+Expected: category `Waiver`, your expiry, the pull-request link and the risk owner's login. Under lab self-approval the metadata also carries `approvalMode: lab-self-approval`. The update that was denied in task 1 now succeeds, because the resource is exempt from that assignment's secure-transfer policy ([exemption structure](https://learn.microsoft.com/azure/governance/policy/concepts/exemption-structure)). `transport-secure-transfer` shows `Exempt`; `residency-allowed-locations` stays `Compliant`. The state can update before `trigger-scan` returns; the list command shows it as soon as it does.
 
 Continue with [challenge 4](../../challenges/challenge-04.md) now, while the exemption is in force, then come back for task 7.
 
@@ -222,7 +230,7 @@ Remove this run's exemption before the [lab teardown](../../labautomation/README
 ```powershell
 $accountId = "/subscriptions/$sub/resourceGroups/$group/providers/Microsoft.Storage/storageAccounts/$account"
 $exemptionId = "$accountId/providers/Microsoft.Authorization/policyExemptions/exc-legacy-client-transfer"
-az rest --method delete --url "$($exemptionId)?api-version=2022-07-01-preview"
+az rest --method delete --url "$($exemptionId)?api-version=2022-07-01-preview" --output none
 az storage account delete --name $account --resource-group $group --yes
 ```
 

@@ -1,6 +1,6 @@
 # Resources: the shared mechanism
 
-> **Status: in progress (22 Nov 2026).** The catalogue mapping, Azure component, archetypes, profiles, their schemas and the enforcement decision rule with its archetype initiative exist as candidates. Exceptions and evidence are implemented and tested offline; the reviewed pull request is the decision record, not a separate schema. Live sandbox demonstrations remain pending.
+> **Status: in progress (22 Nov 2026).** The catalogue mapping, Azure component, archetypes, profiles, their schemas and the enforcement decision rule with its archetype initiative exist as candidates. Exceptions and evidence are implemented and tested offline; the reviewed pull request is the decision record, not a separate schema. Live sandbox demonstrations ran on 23 Nov 2026 ([validation record](../walkthrough/validation-run.md)).
 
 The challenges run on the files in this folder. Other tools may import them, so they are a data contract: generic, machine-readable and versioned.
 

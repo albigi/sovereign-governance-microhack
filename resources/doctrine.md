@@ -1,6 +1,6 @@
 # Enforcement decision rule
 
-> **Status: proposed (20 Nov 2026).** Validated offline: classifier tests, `check` against the pinned catalogue and the pinned built-in definitions, Bicep build. The sandbox deployment and the per-effect demonstrations are **pending**. Every mapping is a candidate until an information-security expert reviews it; nothing here is a compliance statement.
+> **Status: proposed (20 Nov 2026).** Validated offline: classifier tests, `check` against the pinned catalogue and the pinned built-in definitions, Bicep build. The sandbox deployment and the per-effect demonstrations ran live on 23 Nov 2026 ([validation record](../walkthrough/validation-run.md)). Every mapping is a candidate until an information-security expert reviews it; nothing here is a compliance statement.
 
 **Answer.** A GS++ requirement gets an Azure Policy effect only when Azure Policy can check it on a resource. Its modal verb and its binding for the archetype then decide how hard the effect is and how a deviation is approved. Everything Azure Policy cannot check routes to a named owner who produces their own evidence. A MUSS requirement that is a process duty never gets a policy effect. It needs a named human decision.
 

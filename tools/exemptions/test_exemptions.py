@@ -216,6 +216,13 @@ class Apply(unittest.TestCase):
             run.assert_called_once()
             self.assertIn("/resourceGroups/rg-mh-example01/", run.call_args.args[0][-1])
 
+    def test_failed_tool_call_reports_one_line_not_a_traceback(self):
+        error = ex.subprocess.CalledProcessError(
+            1, [r"C:\tools\gh.exe", "repo", "view"], stderr="GraphQL: Could not resolve to a Repository\n")
+        args = ex.argparse.Namespace(handler=lambda _: (_ for _ in ()).throw(error))
+        with self.assertRaisesRegex(SystemExit, r"'gh repo view' failed \(exit 1\): GraphQL: Could not resolve"):
+            ex.run_handler(args)
+
     def test_only_approved_unexpired_files_are_applied(self):
         approved = self.write(example())
         unapproved = self.write(dict(example(), id="exc-unapproved"))

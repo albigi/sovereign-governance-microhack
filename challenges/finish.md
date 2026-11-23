@@ -1,6 +1,6 @@
 # Finish
 
-> **Status (20 Nov 2026): the offline route is ready; the Azure steps are not yet validated.** See [Setup](../Readme.md#setup).
+> **Status (23 Nov 2026): challenges 1 to 4 validated live; the lab teardown is not yet validated.** See [Setup](../Readme.md#setup).
 
 **Learning objective:** take one application from a sovereign requirement set to enforced controls, a reviewed exception and a reproducible evidence pack, and explain each step to an auditor.
 

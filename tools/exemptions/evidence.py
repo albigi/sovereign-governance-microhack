@@ -708,7 +708,7 @@ def build_parser():
 
 def main(argv=None):
     args = build_parser().parse_args(argv)
-    return args.handler(args)
+    return ex.run_handler(args)
 
 
 if __name__ == "__main__":
