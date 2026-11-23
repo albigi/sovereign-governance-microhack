@@ -1,6 +1,6 @@
 # Live validation record
 
-**Status (23 Nov 2026): challenges 1 to 4 validated live.** Offline tests pass. Every Azure and GitHub step of challenges 2 to 4 behaved as the walkthroughs state in one isolated Azure run by the maintainer. The lab teardown, attributable cost and a run by a first-time participant are pending. This is a lab observation, not an assurance or compliance claim.
+**Status (23 Nov 2026): the functional path through challenges 1 to 4 was exercised by the maintainer.** Challenge 1 ran locally; challenges 2 to 4 used live Azure and GitHub with lab self-approval. Branch protection was unavailable, so required-check merge blocking was not validated. Full lab teardown, attributable cost and a first-time participant's clean-subscription run remain pending. This is a lab observation, not an assurance or compliance claim.
 
 ## Live Azure results
 
@@ -11,13 +11,13 @@ The run used one disposable resource group in Germany West Central. Identifiers 
 | Corp policy assignment | Deployed at the lab resource-group scope; all 13 parameters match the generated archetype | Pass |
 | Secure transfer disabled | Storage-account request rejected; matching Azure Policy Deny event recorded | Pass |
 | Disallowed region | Storage-account request rejected; matching Azure Policy Deny event recorded | Pass |
-| Anonymous blob access | Creation requested public blob access; resulting `allowBlobPublicAccess` was `false` | Pass |
+| Anonymous blob access | Creation requested public blob access; resulting `allowBlobPublicAccess` was `false`. A separate retest excluded the lab account from inherited Modify policies and again requested `true`; Azure returned `false`. The temporary exclusion was removed and public network access remained disabled | Pass |
 | Infrastructure encryption | Compliant test account reports infrastructure encryption enabled | Pass |
-| Public network access | First attempt: an inherited tenant Modify policy rewrote `Enabled` to `Disabled` before Deny ran (activity log). With the test account excluded from that tenant policy, the request was rejected by `exposure-public-network-access` | Pass |
+| Public network access | Original activity log: inherited Modify rewrote `Enabled` to `Disabled`. Retest at 10:49 UTC on 23 Nov: the excluded test request returned HTTP 403 `RequestDisallowedByPolicy`. The retained ARM response names assignment `gspp-corp`, reference `exposure-public-network-access`, effect `Deny`, and evaluated value `Enabled`. The resource was absent before and after the request | Pass |
 | Key Vault diagnostics | The `setByPolicy-LogAnalytics` diagnostic setting appeared, with the audit category routed to the lab workspace | Pass |
 | Compliance scan | All `gspp-corp` states match the challenge 2 table: only `encryption-infrastructure` (B) and `backup-geo-redundant-storage` (B, C) are non-compliant | Pass |
 | Challenge 3, task 1 | Compliant account created; disabling secure transfer rejected by `transport-secure-transfer` | Pass |
-| Challenge 3, task 2 | Exception repository created with lab self-approval. Branch protection on a private repository under GitHub Free returned HTTP 403; the run continued without it | Pass, unprotected |
+| Challenge 3, task 2 | Exception repository created with lab self-approval. Branch protection on a private repository under GitHub Free returned HTTP 403; the run continued without it | Setup passed; merge gate unvalidated |
 | Challenge 3, task 3 | In GitHub Actions, `validate` passed and `decision` reported `WAITING` with the `/approve` hint | Pass |
 | Challenge 3, task 4 | Residency request refused (STM.2.1.7 is MUSS); request without expiry refused; both closed unmerged | Pass |
 | Challenge 3, task 5 | A Comment review starting `/approve` started a second run whose `decision` reported `APPROVED … (lab self-approval)`. The first run's failed `decision` stayed listed until re-run; the re-run also passed | Pass |
@@ -30,7 +30,7 @@ The run used one disposable resource group in Germany West Central. Identifiers 
 | Challenge 4, task 6 | After the expiry, KONF.14.1 and KONF.14.1.1 lost the approved deviation; UMS.5.1 counted 0 exemptions in force | Pass |
 | Lab teardown and attributable cost | Not yet run; billing data not yet attributable | Pending |
 
-Hosting tenants can assign their own Modify or Deny policies that run before or beside the lab's. The tests touched only resources created for this run; pre-existing resources were not changed.
+Hosting tenants can assign their own Modify or Deny policies that run before or beside the lab's. A successful property change is not enough to attribute an effect to the lab: inspect the policy assignment in the activity log or ARM denial response. Retest requests, raw responses and HTTP metadata are retained privately; tenant identifiers and tenant-specific exclusion mechanisms are not published. The tests touched only resources created for this run; pre-existing resources were not changed.
 
 ## Timing
 

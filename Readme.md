@@ -1,6 +1,6 @@
 # **From Requirement to Evidence: governing sovereign requirements on Azure**
 
-> **Status (23 Nov 2026): challenges 1 to 4 validated end to end in one live Azure run by the maintainer.** The [validation record](walkthrough/validation-run.md) lists every observation. The lab teardown, billed cost and a run by a first-time participant are still pending.
+> **Status (23 Nov 2026): the functional path through challenges 1 to 4 was exercised by the maintainer, using live Azure and GitHub for challenges 2 to 4.** The [validation record](walkthrough/validation-run.md) lists the observations and limits: lab self-approval was used, without branch protection. The protected-branch merge gate, full lab teardown, billed cost and a first-time participant's clean-subscription run remain unvalidated.
 
 An architect can take a sovereign requirement set (BSI Grundschutz++ and C5), decide which requirements apply to an application, enforce them with native Azure Policy by a stated decision rule, handle a justified exception as a reviewed pull request, and generate machine-readable audit evidence as a by-product.
 
@@ -125,9 +125,9 @@ For each synthetic run, report the date, sample size, elapsed minutes per step, 
 | Challenge | Saves | Measured as | Result |
 |:---------:|-------|-------------|--------|
 | 1 | Reading the whole catalogue for each application | Minutes from application profile to applicable-requirement list; agreement with expert-labelled applicability | Offline: 10 synthetic profiles passed; leave planner 17/23 applicable. Reader duration and expert agreement not measured. |
-| 2 | Choosing and defending a policy effect per requirement by hand | Minutes from requirement list to deployed initiative; deployed effects that differ from the decision rule | Live: TLS, residency and public-network Deny, anonymous-access Modify, Key Vault diagnostics and the full compliance scan behaved as expected. Hosting-tenant Modify policies can pre-empt Deny; see the challenge 2 walkthrough. |
-| 3 | Chasing exception decisions through mail and tickets | Minutes from request to approved exemption; exemptions without approver or expiry | Offline: permitted request and four expected refusals matched. Live approval and Azure expiry UNVALIDATED. |
-| 4 | Assembling audit evidence by hand before each review | Minutes to regenerate the evidence pack; differences between two runs on the same state | Offline: two synthetic leave-planner packs, 23 findings each, byte-identical; 0.586/0.556 seconds per generation command. No live telemetry or savings measured. |
+| 2 | Choosing and defending a policy effect per requirement by hand | Minutes from requirement list to deployed initiative; deployed effects that differ from the decision rule | Live: secure-transfer, residency and public-network Deny, anonymous-access Modify, Key Vault diagnostics and the full compliance scan behaved as expected. Hosting-tenant Modify policies can mask results; see the challenge 2 walkthrough. |
+| 3 | Chasing exception decisions through mail and tickets | Minutes from request to approved exemption; exemptions without approver or expiry | Live: request checks, two refused requests, lab self-approval, exemption application and expiry observed. Required-check merge blocking was not validated because branch protection was unavailable. |
+| 4 | Assembling audit evidence by hand before each review | Minutes to regenerate the evidence pack; differences between two runs on the same state | Live: two packs from the same collected snapshot were byte-identical; expiry removed the approved deviation from the later pack. No savings against manual work measured. |
 
 ## Known limitations
 
@@ -137,6 +137,7 @@ For each synthetic run, report the date, sample size, elapsed minutes per step, 
 - Azure Policy exemptions make expiry optional; this lab makes it mandatory with a pull-request check, which protects only exemptions raised through that check.
 - The evidence collector reads policy state, exemptions and pull requests only. Requirements that need Entra logs, Purview records or manual attestations stay unresolved.
 - The offline rehearsal uses a frozen synthetic snapshot: its approvals and observations are fixtures, not actions it performed.
+- Lab self-approval is a teaching simplification, disclosed in the evidence. It does not validate independent risk-owner approval. Without branch protection, failed checks do not block a merge.
 - One lab run per subscription at a time: the policy set name is subscription-wide. Policy evaluation is asynchronous, so live steps include waits.
 
 ## When not to use it
@@ -144,7 +145,7 @@ For each synthetic run, report the date, sample size, elapsed minutes per step, 
 - You need a certification or an auditor's opinion: the lab produces evidence for an assessor, not a verdict.
 - Your requirement set has no modal verbs comparable to GS++: the decision rule depends on them.
 - You want to enforce policy in production: the lab assigns to one sandbox resource group. Production assignments belong in your landing-zone policy-as-code pipeline, for example [Enterprise Policy as Code](https://azure.github.io/enterprise-azure-policy-as-code/).
-- Nobody can act as a separate risk owner: the exception check depends on the approver not being the requester.
+- You need production separation of duties but nobody can act as a separate risk owner: lab self-approval is not a substitute.
 
 ## Sovereignty notes
 

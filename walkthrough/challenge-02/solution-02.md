@@ -182,6 +182,8 @@ Expected (observed in the [validation run](../validation-run.md)):
 
 **If A3 succeeds but the account shows `publicNetworkAccess: Disabled`,** a policy inherited from your organisation rewrote the request first: Azure applies Modify effects before Deny. The activity log shows a `modify` event from another assignment. Ask your platform team how to exclude the lab (often a tag on the resource or group), or use a subscription without that policy, then repeat A3.
 
+For the retest, retain the denial response and verify that it names assignment `gspp-corp`, reference `exposure-public-network-access`, and an evaluated public-network value of `Enabled`. Also check the modifying assignment for B: an inherited policy can disable anonymous access too. Scope any authorised exclusion to the disposable test resource and remove it after the test; do not disable organisation-wide controls.
+
 The two `Audit` findings are KANN requirements that Corp does not select: information, not a deviation to approve. Corp deliberately keeps C locally redundant: geo-redundant storage would copy data to the paired region, outside Corp's `allowed_locations`, and the allowed-locations policy would not see it ([doctrine](../../resources/doctrine.md#where-azure-policy-alone-gives-false-assurance)).
 
 Check D after about 15 minutes, the evaluation delay for a new resource:
